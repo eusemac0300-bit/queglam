@@ -112,31 +112,120 @@
             box-shadow: 0 4px 15px rgba(75, 0, 130, 0.05);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Calendar Styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
             margin-top: 1rem;
         }
 
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
+        .day-card {
+            background: #fff;
+            border: 1px solid #eaeaea;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
         }
 
-        th { font-weight: 900; color: var(--primary); }
-        
-        tr:hover { background: rgba(255, 105, 180, 0.03); }
+        .day-header {
+            background: rgba(255, 105, 180, 0.05);
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 105, 180, 0.1);
+        }
 
-        .badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 99px;
+        .day-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--charcoal);
+            text-transform: capitalize;
+        }
+
+        .day-header span {
+            display: block;
             font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .day-body {
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .slot {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            border: 1px solid #eee;
+            position: relative;
+        }
+
+        .slot-title {
+            font-weight: 900;
+            display: block;
+            margin-bottom: 0.25rem;
+            color: #444;
+        }
+
+        .slot-available {
+            background: #f8fff8;
+            border-color: #c3f0c3;
+            color: #2b8a2b;
+            text-align: center;
             font-weight: 700;
         }
 
-        .badge-bloqueo { background: #ffe6e6; color: #cc0000; }
-        .badge-reserva { background: #e6f7ff; color: #0066cc; }
+        .slot-booked {
+            background: #f0f7ff;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .slot-blocked {
+            background: #fffafa;
+            border-left: 4px solid #cc0000;
+        }
+
+        .slot-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .delete-btn {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #cc0000;
+            cursor: pointer;
+            padding: 0.2rem;
+            display: inline-flex;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: background 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #ffeeee;
+            border-color: #ffcccc;
+        }
+
+        .delete-btn .material-symbols-outlined { font-size: 1rem; }
+
+        .client-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .client-info span { display: flex; align-items: center; gap: 0.3rem; }
+        .client-info strong { color: var(--charcoal); }
 
         .form-row {
             display: grid;
@@ -289,57 +378,97 @@
                 return;
             }
 
-            if (!data || data.length === 0) {
-                tableContainer.innerHTML = 'No hay ninguna reserva ni bloqueos futuros.';
+            if (!data) {
+                tableContainer.innerHTML = 'No hay datos.';
                 return;
             }
 
-            renderTable(data);
+            renderCalendar(data);
         }
 
-        function renderTable(data) {
-            // Filtrar solo las de hoy en adelante (opcional, pero buena práctica)
-            const hoy = new Date().toISOString().split('T')[0];
-            const dataFutura = data.filter(d => d.fecha >= hoy);
+        function renderCalendar(data) {
+            const hoyStr = new Date().toISOString().split('T')[0];
+            const dataFutura = data.filter(d => d.fecha >= hoyStr); // Ignoramos reservas pasadas
 
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Bloque / Hora</th>
-                            <th>Tipo</th>
-                            <th>Clienta</th>
-                            <th>Servicio / Teléfono</th>
-                            <th>Borrar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+            const bloquesDisponibles = [
+                "Mañana (10:00 - 13:00)",
+                "Tarde (14:00 - 17:00)",
+                "Atardecer (18:00 - 20:00)"
+            ];
 
-            dataFutura.forEach(item => {
-                const esBloqueo = item.servicio === 'BLOQUEO';
-                const fechaFormat = new Date(item.fecha + 'T12:00:00').toLocaleDateString('es-CL');
-                const badge = esBloqueo ? '<span class="badge badge-bloqueo">BLOQUEADO</span>' : '<span class="badge badge-reserva">RESERVA</span>';
+            // Generar los próximos 14 días
+            let html = '<div class="calendar-grid">';
+            
+            for(let i=0; i<14; i++) {
+                let dateObj = new Date();
+                dateObj.setDate(dateObj.getDate() + i);
+                const isoDate = dateObj.toISOString().split('T')[0];
+                
+                // Formatear nombre del día
+                const options = { weekday: 'long', day: 'numeric', month: 'short' };
+                const dateDisplay = dateObj.toLocaleDateString('es-CL', options);
                 
                 html += `
-                    <tr style="${esBloqueo ? 'background: #fffafa;' : ''}">
-                        <td><strong>${fechaFormat}</strong></td>
-                        <td>${item.horario}</td>
-                        <td>${badge}</td>
-                        <td>${esBloqueo ? '<em>Admin</em>' : item.nombre}</td>
-                        <td>${esBloqueo ? 'No Disponible' : item.servicio + '<br><small>' + item.telefono + '</small>'}</td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteItem('${item.id}')" title="Eliminar / Liberar">
-                                <span class="material-symbols-outlined">delete</span>
-                            </button>
-                        </td>
-                    </tr>
+                <div class="day-card">
+                    <div class="day-header">
+                        <h3>${dateDisplay}</h3>
+                        <span>${isoDate}</span>
+                    </div>
+                    <div class="day-body">
                 `;
-            });
 
-            html += '</tbody></table>';
-            html += '<p style="margin-top:1rem;font-size:0.85rem;color:#888;">* Solo se muestran reservas desde el día de hoy en adelante.</p>';
+                // Iterar sobre los 3 bloques de tiempo para ese día
+                bloquesDisponibles.forEach(bloqueName => {
+                    // Buscar si alguien agendó o bloqueó este día y horario
+                    const reserva = dataFutura.find(r => r.fecha === isoDate && r.horario === bloqueName);
+
+                    if (!reserva) {
+                        html += `
+                            <div class="slot slot-available">
+                                <span class="slot-title">${bloqueName.split("(")[0]}</span>
+                                ✅ Libre
+                            </div>
+                        `;
+                    } else {
+                        const esBloqueo = reserva.servicio === 'BLOQUEO';
+                        
+                        if (esBloqueo) {
+                            html += `
+                                <div class="slot slot-blocked">
+                                    <div class="slot-actions">
+                                        <button class="delete-btn" onclick="deleteItem('${reserva.id}')" title="Desbloquear"><span class="material-symbols-outlined">delete</span></button>
+                                    </div>
+                                    <span class="slot-title">${bloqueName.split("(")[0]}</span>
+                                    <span style="color:#cc0000; font-weight:bold;">🚫 BLOQUEADO</span>
+                                </div>
+                            `;
+                        } else {
+                            html += `
+                                <div class="slot slot-booked">
+                                    <div class="slot-actions">
+                                        <button class="delete-btn" onclick="deleteItem('${reserva.id}')" title="Eliminar Reserva"><span class="material-symbols-outlined">delete</span></button>
+                                    </div>
+                                    <span class="slot-title">${bloqueName.split("(")[0]}</span>
+                                    <span class="badge badge-reserva">RESERVADO</span>
+                                    <div class="client-info">
+                                        <span><span class="material-symbols-outlined" style="font-size:1rem">person</span> <strong>${reserva.nombre}</strong></span>
+                                        <span><span class="material-symbols-outlined" style="font-size:1rem">cut</span> ${reserva.servicio}</span>
+                                        <span><span class="material-symbols-outlined" style="font-size:1rem">call</span> <a href="https://wa.me/${reserva.telefono}" target="_blank" style="color:#0066cc">${reserva.telefono}</a></span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                });
+
+                html += `
+                    </div>
+                </div>
+                `;
+            }
+
+            html += '</div>';
+            html += '<p style="margin-top:2rem;font-size:0.85rem;color:#888;">* Mostrando los próximos 14 días en vivo. Puedes eliminar bloqueos o reservas con el ícono de la papelera.</p>';
             tableContainer.innerHTML = html;
         }
 
