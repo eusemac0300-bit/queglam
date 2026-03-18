@@ -387,7 +387,12 @@
         }
 
         function renderCalendar(data) {
-            const hoyStr = new Date().toISOString().split('T')[0];
+            const dateStrObj = new Date();
+            const hoyYear = dateStrObj.getFullYear();
+            const hoyMonth = String(dateStrObj.getMonth() + 1).padStart(2, '0');
+            const hoyDay = String(dateStrObj.getDate()).padStart(2, '0');
+            const hoyStr = `${hoyYear}-${hoyMonth}-${hoyDay}`;
+            
             const dataFutura = data.filter(d => d.fecha >= hoyStr); // Ignoramos reservas pasadas
 
             const bloquesDisponibles = [
@@ -402,7 +407,11 @@
             for(let i=0; i<14; i++) {
                 let dateObj = new Date();
                 dateObj.setDate(dateObj.getDate() + i);
-                const isoDate = dateObj.toISOString().split('T')[0];
+                
+                const year = dateObj.getFullYear();
+                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const day = String(dateObj.getDate()).padStart(2, '0');
+                const isoDate = `${year}-${month}-${day}`;
                 
                 // Formatear nombre del día
                 const options = { weekday: 'long', day: 'numeric', month: 'short' };
@@ -497,11 +506,15 @@
                     fecha: fecha,
                     horario: h,
                     comuna: 'N/A',
-                    comentarios: 'Bloqueado por el administrador'
+                    comentarios: 'Bloqueado por el administrador',
+                    created_at: new Date()
                 }));
 
                 const { error } = await _supabase.from('reservas').insert(inserts);
-                if (error) alert('Error al bloquear');
+                if (error) {
+                    alert('Error al bloquear: ' + error.message);
+                    console.error(error);
+                }
             } else {
                 // Insert individual
                 const { error } = await _supabase.from('reservas').insert([{
@@ -511,9 +524,13 @@
                     fecha: fecha,
                     horario: horario,
                     comuna: 'N/A',
-                    comentarios: 'Bloqueado por el administrador'
+                    comentarios: 'Bloqueado por el administrador',
+                    created_at: new Date()
                 }]);
-                if (error) alert('Error al bloquear');
+                if (error) {
+                    alert('Error al bloquear: ' + error.message);
+                    console.error(error);
+                }
             }
 
             btn.disabled = false;
