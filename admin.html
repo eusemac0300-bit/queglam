@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | ¡Qué Glam!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #FF69B4;
+            --primary-dark: #e84da0;
+            --charcoal: #4B0082;
+            --bg-soft: #FDF2F8;
+            --white: #FFFFFF;
+            --radius-md: 1rem;
+            --font: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-soft);
+            color: var(--charcoal);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 15px rgba(75, 0, 130, 0.05);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover { background: var(--primary-dark); }
+        .btn-danger { background: #ff4d4d; }
+        .btn-danger:hover { background: #cc0000; }
+
+        /* Login Screen */
+        #loginScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+        }
+
+        .login-box {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 8px 30px rgba(75, 0, 130, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border: 2px solid #ddd;
+            border-radius: 0.5rem;
+            font-family: var(--font);
+            box-sizing: border-box;
+        }
+
+        /* Dashboard */
+        #dashboard { display: none; }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(75, 0, 130, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th { font-weight: 900; color: var(--primary); }
+        
+        tr:hover { background: rgba(255, 105, 180, 0.03); }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .badge-bloqueo { background: #ffe6e6; color: #cc0000; }
+        .badge-reserva { background: #e6f7ff; color: #0066cc; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label { font-weight: 700; font-size: 0.9rem; }
+        .form-group input, .form-group select {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            font-family: var(--font);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #cc0000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-weight: 700;
+            color: var(--charcoal);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <h2>Acceso Administrador</h2>
+            <p>Ingresa la contraseña para gestionar las reservas.</p>
+            <form id="loginForm">
+                <input type="password" id="adminPassword" placeholder="Contraseña" required>
+                <button type="submit" class="btn" style="width: 100%">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="container">
+        <header class="header">
+            <h1><span class="material-symbols-outlined">calendar_month</span> Panel de Reservas</h1>
+            <button class="btn" onclick="logout()">Salir</button>
+        </header>
+
+        <!-- Bloquear Horario -->
+        <div class="card">
+            <h2><span class="material-symbols-outlined">block</span> Bloquear un Horario</h2>
+            <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: #666;">Selecciona una fecha y un horario para tacharlo e impedir que las clientas puedan agendar.</p>
+            <form id="blockForm" class="form-row">
+                <div class="form-group">
+                    <label>Fecha a bloquear</label>
+                    <input type="date" id="blockFecha" required>
+                </div>
+                <div class="form-group">
+                    <label>Horario</label>
+                    <select id="blockHorario" required>
+                        <option value="">Seleccione bloque</option>
+                        <option value="Mañana (10:00 - 13:00)">Mañana (10:00 - 13:00)</option>
+                        <option value="Tarde (14:00 - 17:00)">Tarde (14:00 - 17:00)</option>
+                        <option value="Atardecer (18:00 - 20:00)">Atardecer (18:00 - 20:00)</option>
+                        <option value="TODO EL DIA">Día Completo (Bloquear Todos)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-danger">Tachar Horario</button>
+            </form>
+        </div>
+
+        <!-- Lista de Reservas -->
+        <div class="card">
+            <h2>Agenda de Clientas y Bloqueos</h2>
+            <div id="tableContainer" class="loading">Cargando datos...</div>
+        </div>
+    </div>
+
+    <script>
+        // Cambia esta contraseña por la que quieras
+        const PASSWORD_CORRECTA = "queglam2026";
+
+        // Supabase Config
+        const supabaseUrl = 'https://qxgwxnlvlokckcxvnkph.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4Z3d4bmx2bG9rY2tjeHZua3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMTk3NzYsImV4cCI6MjA4ODg5NTc3Nn0.Zud7tkNoG-CyuuwdpgWel41G0a8K9f9-2EReGV5YTBM';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // UI Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('loginForm');
+        const tableContainer = document.getElementById('tableContainer');
+        const blockForm = document.getElementById('blockForm');
+
+        // Init Date min
+        document.getElementById('blockFecha').setAttribute('min', new Date().toISOString().split('T')[0]);
+
+        // Login Logic
+        if(localStorage.getItem('queglam_admin_session') === 'activa') {
+            showDashboard();
+        }
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pw = document.getElementById('adminPassword').value;
+            if(pw === PASSWORD_CORRECTA) {
+                localStorage.setItem('queglam_admin_session', 'activa');
+                showDashboard();
+            } else {
+                alert('Contraseña incorrecta');
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('queglam_admin_session');
+            window.location.reload();
+        }
+
+        function showDashboard() {
+            loginScreen.style.display = 'none';
+            dashboard.style.display = 'block';
+            loadData();
+        }
+
+        // Fetch Data
+        async function loadData() {
+            tableContainer.innerHTML = 'Cargando datos...';
+            // Traer reservas ordenadas por fecha y después horario
+            const { data, error } = await supabase
+                .from('reservas')
+                .select('*')
+                .order('fecha', { ascending: true })
+                .order('horario', { ascending: true });
+
+            if (error) {
+                tableContainer.innerHTML = '<span style="color:red">Error cargando datos de Supabase. Revisa la conexión.</span>';
+                console.error(error);
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                tableContainer.innerHTML = 'No hay ninguna reserva ni bloqueos futuros.';
+                return;
+            }
+
+            renderTable(data);
+        }
+
+        function renderTable(data) {
+            // Filtrar solo las de hoy en adelante (opcional, pero buena práctica)
+            const hoy = new Date().toISOString().split('T')[0];
+            const dataFutura = data.filter(d => d.fecha >= hoy);
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Bloque / Hora</th>
+                            <th>Tipo</th>
+                            <th>Clienta</th>
+                            <th>Servicio / Teléfono</th>
+                            <th>Borrar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            dataFutura.forEach(item => {
+                const esBloqueo = item.servicio === 'BLOQUEO';
+                const fechaFormat = new Date(item.fecha + 'T12:00:00').toLocaleDateString('es-CL');
+                const badge = esBloqueo ? '<span class="badge badge-bloqueo">BLOQUEADO</span>' : '<span class="badge badge-reserva">RESERVA</span>';
+                
+                html += `
+                    <tr style="${esBloqueo ? 'background: #fffafa;' : ''}">
+                        <td><strong>${fechaFormat}</strong></td>
+                        <td>${item.horario}</td>
+                        <td>${badge}</td>
+                        <td>${esBloqueo ? '<em>Admin</em>' : item.nombre}</td>
+                        <td>${esBloqueo ? 'No Disponible' : item.servicio + '<br><small>' + item.telefono + '</small>'}</td>
+                        <td>
+                            <button class="delete-btn" onclick="deleteItem('${item.id}')" title="Eliminar / Liberar">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            html += '<p style="margin-top:1rem;font-size:0.85rem;color:#888;">* Solo se muestran reservas desde el día de hoy en adelante.</p>';
+            tableContainer.innerHTML = html;
+        }
+
+        // Add Bloqueo
+        blockForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fecha = document.getElementById('blockFecha').value;
+            const horario = document.getElementById('blockHorario').value;
+            const btn = e.target.querySelector('button');
+
+            btn.disabled = true;
+            btn.textContent = "Bloqueando...";
+
+            if (horario === 'TODO EL DIA') {
+                // Insertar 3 filas para bloquear todos los horarios
+                const horarios = [
+                    "Mañana (10:00 - 13:00)",
+                    "Tarde (14:00 - 17:00)",
+                    "Atardecer (18:00 - 20:00)"
+                ];
+                
+                const inserts = horarios.map(h => ({
+                    nombre: 'ADMIN',
+                    telefono: '000',
+                    servicio: 'BLOQUEO',
+                    fecha: fecha,
+                    horario: h,
+                    comuna: 'N/A',
+                    comentarios: 'Bloqueado por el administrador'
+                }));
+
+                const { error } = await supabase.from('reservas').insert(inserts);
+                if (error) alert('Error al bloquear');
+            } else {
+                // Insert individual
+                const { error } = await supabase.from('reservas').insert([{
+                    nombre: 'ADMIN',
+                    telefono: '000',
+                    servicio: 'BLOQUEO',
+                    fecha: fecha,
+                    horario: horario,
+                    comuna: 'N/A',
+                    comentarios: 'Bloqueado por el administrador'
+                }]);
+                if (error) alert('Error al bloquear');
+            }
+
+            btn.disabled = false;
+            btn.textContent = "Tachar Horario";
+            blockForm.reset();
+            loadData(); // recargar
+        });
+
+        // Delete Item (Libera)
+        async function deleteItem(id) {
+            if(confirm("¿Estás seguro de eliminar este registro? Si es una reserva, se borrará en la base de datos y quedará el horario libre. Si es un bloqueo, se liberará.")) {
+                const { error } = await supabase.from('reservas').delete().eq('id', id);
+                if(error) {
+                    alert("No se pudo borrar. Puede que permisos de DELETE no estén configurados en Supabase.");
+                } else {
+                    loadData();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

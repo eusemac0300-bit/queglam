@@ -1291,6 +1291,38 @@
         const today = new Date().toISOString().split('T')[0];
         fechaInput.setAttribute('min', today);
 
+        const horarioSelect = document.getElementById('horario');
+
+        // Escucha cambios en la fecha para deshabilitar horarios ya tomados o bloqueados
+        fechaInput.addEventListener('change', async (e) => {
+            const selectedDate = e.target.value;
+            if(!selectedDate) return;
+            
+            // Reestablecer todas las opciones a disponibles
+            Array.from(horarioSelect.options).forEach(opt => {
+                if (opt.value) {
+                    opt.disabled = false;
+                    opt.text = opt.value;
+                }
+            });
+
+            // Consultar a Supabase las reservas y bloqueos para ese día
+            const { data, error } = await _supabase
+                .from('reservas')
+                .select('horario')
+                .eq('fecha', selectedDate);
+
+            if (data && data.length > 0) {
+                const reservedHorarios = data.map(r => r.horario);
+                Array.from(horarioSelect.options).forEach(opt => {
+                    if (reservedHorarios.includes(opt.value)) {
+                        opt.disabled = true;
+                        opt.text = opt.value + ' (OCUPADO)';
+                    }
+                });
+            }
+        });
+
         // ===== Select service from card =====
         function selectService(serviceName) {
             const select = document.getElementById('servicio');
@@ -1344,6 +1376,19 @@
             submitBtn.textContent = 'Guardando reserva...';
 
             try {
+                // Pre-check de seguridad en caso de que alguien haya tomado la hora mientras se llenaba el formulario
+                const { data: existData } = await _supabase
+                    .from('reservas')
+                    .select('id')
+                    .eq('fecha', fecha)
+                    .eq('horario', horario);
+
+                if (existData && existData.length > 0) {
+                    showToast('⚠️ Lo sentimos, este horario acaba de ser ocupado. Por favor elige otro.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    return;
+                }
                 // 1. Save to Supabase
                 const { error } = await _supabase
                     .from('reservas')
@@ -1389,7 +1434,23 @@
                 }
                 mensaje += `\n¡Espero su confirmación! 🙏`;
 
-                // 4. Encode and open WhatsApp
+                // 4. Send Email Alert automatically via FormSubmit (invisible)
+                fetch("https://formsubmit.co/ajax/leonkarim550@gmail.com", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        _subject: "NUEVA RESERVA - ¡Qué Glam!",
+                        Nombre: nombre,
+                        Teléfono: telefono,
+                        Servicio: servicio,
+                        Fecha: fechaFormateada,
+                        Horario: horario,
+                        Comuna: comuna,
+                        Comentarios: comentarios || 'Ninguno'
+                    })
+                }).catch(err => console.log('Error email:', err));
+
+                // 5. Build WhatsApp message and open
                 const whatsappNumber = '56954244280'; // Actualizado para Euse
                 const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensaje)}`;
 
