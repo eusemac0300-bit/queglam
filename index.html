@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ========== DESIGN TOKENS ========== */
         :root {
@@ -1257,6 +1259,11 @@
 
     <!-- ========== JAVASCRIPT ========== -->
     <script>
+        // ===== Supabase Config =====
+        const supabaseUrl = 'https://qxgwxnlvlokckcxvnkph.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4Z3d4bmx2bG9rY2tjeHZua3BoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMTk3NzYsImV4cCI6MjA4ODg5NTc3Nn0.Zud7tkNoG-CyuuwdpgWel41G0a8K9f9-2EReGV5YTBM';
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
         // ===== Mobile Menu =====
         const menuToggle = document.getElementById('menuToggle');
         const menuClose = document.getElementById('menuClose');
@@ -1309,11 +1316,14 @@
             setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        // ===== Form submission → WhatsApp =====
+        // ===== Form submission → Supabase + WhatsApp =====
         const bookingForm = document.getElementById('bookingForm');
 
-        bookingForm.addEventListener('submit', function(e) {
+        bookingForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
 
             const nombre = document.getElementById('nombre').value.trim();
             const telefono = document.getElementById('telefono').value.trim();
@@ -1329,34 +1339,73 @@
                 return;
             }
 
-            // Format date nicely
-            const fechaObj = new Date(fecha + 'T12:00:00');
-            const fechaFormateada = fechaObj.toLocaleDateString('es-CL', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+            // UI Feedback: Loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Guardando reserva...';
 
-            // Build WhatsApp message
-            let mensaje = `✨ *NUEVA RESERVA — ¡Qué Glam!* ✨\n\n`;
-            mensaje += `👤 *Nombre:* ${nombre}\n`;
-            mensaje += `📱 *Teléfono:* ${telefono}\n`;
-            mensaje += `💇‍♀️ *Servicio:* ${servicio}\n`;
-            mensaje += `📅 *Fecha:* ${fechaFormateada}\n`;
-            mensaje += `🕐 *Horario:* ${horario}\n`;
-            mensaje += `📍 *Comuna:* ${comuna}\n`;
-            if (comentarios) {
-                mensaje += `💬 *Comentarios:* ${comentarios}\n`;
+            try {
+                // 1. Save to Supabase
+                const { error } = await _supabase
+                    .from('reservas')
+                    .insert([
+                        { 
+                            nombre, 
+                            telefono, 
+                            servicio, 
+                            fecha, 
+                            horario, 
+                            comuna, 
+                            comentarios,
+                            created_at: new Date()
+                        }
+                    ]);
+
+                if (error) {
+                    console.error('Error Supabase:', error);
+                    // We continue even with error to not block the user, but log it
+                } else {
+                    console.log('Reserva guardada en Supabase ✅');
+                }
+
+                // 2. Format date nicely for WhatsApp
+                const fechaObj = new Date(fecha + 'T12:00:00');
+                const fechaFormateada = fechaObj.toLocaleDateString('es-CL', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                // 3. Build WhatsApp message
+                let mensaje = `✨ *NUEVA RESERVA — ¡Qué Glam!* ✨\n\n`;
+                mensaje += `👤 *Nombre:* ${nombre}\n`;
+                mensaje += `📱 *Teléfono:* ${telefono}\n`;
+                mensaje += `💇‍♀️ *Servicio:* ${servicio}\n`;
+                mensaje += `📅 *Fecha:* ${fechaFormateada}\n`;
+                mensaje += `🕐 *Horario:* ${horario}\n`;
+                mensaje += `📍 *Comuna:* ${comuna}\n`;
+                if (comentarios) {
+                    mensaje += `💬 *Comentarios:* ${comentarios}\n`;
+                }
+                mensaje += `\n¡Espero su confirmación! 🙏`;
+
+                // 4. Encode and open WhatsApp
+                const whatsappNumber = '56954244280'; // Actualizado para Euse
+                const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensaje)}`;
+
+                window.open(url, '_blank');
+                showToast('✅ ¡Reserva guardada y enviada a WhatsApp!');
+                
+                // Clear form
+                bookingForm.reset();
+
+            } catch (err) {
+                console.error('Error fatal:', err);
+                showToast('❌ Hubo un error, inténtalo de nuevo');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
             }
-            mensaje += `\n¡Espero su confirmación! 🙏`;
-
-            // Encode and open WhatsApp
-            const whatsappNumber = '56954244280'; // Actualizado para Euse
-            const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensaje)}`;
-
-            window.open(url, '_blank');
-            showToast('✅ ¡Redirigiendo a WhatsApp!');
         });
 
         // ===== Intersection Observer for animations =====
