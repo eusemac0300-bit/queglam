@@ -301,6 +301,33 @@
         .product-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: #f0f0f0; }
         .product-info { flex: 1; }
         .product-info h3 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+        
+        /* Drag and Drop Zone */
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(255, 105, 180, 0.05);
+        }
+        .drop-zone p { margin: 0.5rem 0; }
+        .upload-preview {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: var(--radius-md);
+            background: #fff;
+        }
+        .upload-preview.active { display: flex; }
     </style>
 </head>
 <body>
@@ -367,6 +394,24 @@
             <div class="card">
                 <h2><span class="material-symbols-outlined">add_circle</span> Subir Nuevo Producto</h2>
                 <form id="productForm" class="form-row">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Foto del Producto</label>
+                        <div class="drop-zone" id="dropZone" onclick="document.getElementById('prodImagenFile').click()">
+                            <span class="material-symbols-outlined" style="font-size: 3rem; color: var(--primary);">add_photo_alternate</span>
+                            <p><strong>Haz clic o arrastra una imagen aquí</strong></p>
+                            <p style="font-size: 0.8rem; color: #888;">Medida ideal: Cuadrada 800x800px. El sistema la optimizará para que no pese nada.</p>
+                            <input type="file" id="prodImagenFile" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                        </div>
+                        <input type="hidden" id="prodImagen" required>
+                        <div class="upload-preview" id="uploadPreview">
+                            <img id="previewImg" src="" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover;">
+                            <div style="flex:1">
+                                <strong style="display:block;margin-bottom:0.25rem;">¡Foto lista!</strong>
+                                <span id="previewName" style="font-size:0.85rem;color:#666;"></span>
+                            </div>
+                            <button type="button" class="btn btn-danger" onclick="removeImage()" style="background:#cc0000; padding: 0.5rem 1rem;">Quitar</button>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label>Nombre del Producto</label>
                         <input type="text" id="prodNombre" required>
@@ -374,10 +419,6 @@
                     <div class="form-group">
                         <label>Precio (Ej: 15000)</label>
                         <input type="number" id="prodPrecio" required>
-                    </div>
-                    <div class="form-group">
-                        <label>URL de la Foto</label>
-                        <input type="url" id="prodImagen" placeholder="https://..." required>
                     </div>
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>Descripción corta</label>
@@ -676,8 +717,77 @@
             productosContainer.innerHTML = html;
         }
 
+        // ================= DRAG & DROP Y OPTIMIZACION DE IMAGEN =================
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('prodImagenFile');
+        const uploadPreview = document.getElementById('uploadPreview');
+        const previewImg = document.getElementById('previewImg');
+        const previewName = document.getElementById('previewName');
+        const prodImagenInput = document.getElementById('prodImagen');
+
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) processFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) processFile(e.target.files[0]);
+        });
+
+        function processFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert("Por favor, sube solo imágenes.");
+                return;
+            }
+            previewName.textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Resolución ideal máx 800x800 manteniendo propiedades
+                    const MAX_WIDTH = 800; const MAX_HEIGHT = 800;
+                    let width = img.width; let height = img.height;
+
+                    if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+                    else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+
+                    canvas.width = width; canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Extraer jpg ultra liviano
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    previewImg.src = dataUrl;
+                    prodImagenInput.value = dataUrl; // A CAJA OCULTA (base64)
+                    
+                    dropZone.style.display = 'none';
+                    uploadPreview.classList.add('active');
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        window.removeImage = function() {
+            fileInput.value = "";
+            prodImagenInput.value = "";
+            previewImg.src = "";
+            uploadPreview.classList.remove('active');
+            dropZone.style.display = 'block';
+        }
+
         productForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            if (!document.getElementById('prodImagen').value) {
+                alert("Por favor sube o arrastra una foto antes de guardar el producto.");
+                return;
+            }
+
             const btn = e.target.querySelector('button');
             btn.disabled = true;
             btn.textContent = "Guardando...";
@@ -694,6 +804,7 @@
             btn.disabled = false;
             btn.textContent = "Guardar Producto";
             productForm.reset();
+            removeImage(); // Reiniciar drop zone
             loadProductos();
         });
 
