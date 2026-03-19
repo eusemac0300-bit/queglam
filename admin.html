@@ -263,6 +263,44 @@
             font-weight: 700;
             color: var(--charcoal);
         }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            background: #fff;
+            color: var(--charcoal);
+            border: 2px solid transparent;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(75, 0, 130, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tab-btn.active {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        
+        .product-card {
+            border: 1px solid #eee;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .product-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: #f0f0f0; }
+        .product-info { flex: 1; }
+        .product-info h3 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -282,9 +320,17 @@
     <!-- Dashboard -->
     <div id="dashboard" class="container">
         <header class="header">
-            <h1><span class="material-symbols-outlined">calendar_month</span> Panel de Reservas</h1>
+            <h1><span class="material-symbols-outlined">flare</span> Panel de Administración</h1>
             <button class="btn" onclick="logout()">Salir</button>
         </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('reservas')" id="tab-reservas"><span class="material-symbols-outlined">calendar_month</span> Calendario</button>
+            <button class="tab-btn" onclick="switchTab('tienda')" id="tab-tienda"><span class="material-symbols-outlined">shopping_bag</span> Mi Tienda</button>
+        </div>
+
+        <!-- Vista Reservas -->
+        <div id="view-reservas" class="view-section active">
 
         <!-- Bloquear Horario -->
         <div class="card">
@@ -314,6 +360,38 @@
             <h2>Agenda de Clientas y Bloqueos</h2>
             <div id="tableContainer" class="loading">Cargando datos...</div>
         </div>
+
+        <!-- Vista Tienda -->
+        <div id="view-tienda" class="view-section">
+            <div class="card">
+                <h2><span class="material-symbols-outlined">add_circle</span> Subir Nuevo Producto</h2>
+                <form id="productForm" class="form-row">
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="prodNombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio (Ej: 15000)</label>
+                        <input type="number" id="prodPrecio" required>
+                    </div>
+                    <div class="form-group">
+                        <label>URL de la Foto</label>
+                        <input type="url" id="prodImagen" placeholder="https://..." required>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Descripción corta</label>
+                        <input type="text" id="prodDesc">
+                    </div>
+                    <button type="submit" class="btn" style="grid-column: 1 / -1;">Guardar Producto</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Catálogo de Productos Actual</h2>
+                <div id="productosContainer" class="loading">Cargando productos...</div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -331,9 +409,19 @@
         const loginForm = document.getElementById('loginForm');
         const tableContainer = document.getElementById('tableContainer');
         const blockForm = document.getElementById('blockForm');
+        const productForm = document.getElementById('productForm');
+        const productosContainer = document.getElementById('productosContainer');
 
         // Init Date min
         document.getElementById('blockFecha').setAttribute('min', new Date().toISOString().split('T')[0]);
+
+        // Manejo de Pestañas
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + tabId).classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
 
         // Login Logic
         if(localStorage.getItem('queglam_admin_session') === 'activa') {
@@ -360,6 +448,7 @@
             loginScreen.style.display = 'none';
             dashboard.style.display = 'block';
             loadData();
+            loadProductos();
         }
 
         // Fetch Data
@@ -548,6 +637,70 @@
                 } else {
                     loadData();
                 }
+            }
+        }
+
+        // ================= PRODUCTOS =================
+        async function loadProductos() {
+            productosContainer.innerHTML = 'Cargando productos...';
+            // Intentamos cargar la tabla nueva. Si falla, avisamos sutilmente.
+            const { data, error } = await _supabase.from('productos').select('*').order('created_at', { ascending: false });
+            
+            if (error) {
+                productosContainer.innerHTML = '<span style="color:red">La tabla "productos" aún no existe o no tiene permisos. ¡Recuerda crearla en Supabase!</span>';
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                productosContainer.innerHTML = 'Aún no hay productos en la tienda.';
+                return;
+            }
+
+            let html = '';
+            data.forEach(p => {
+                html += `
+                <div class="product-card">
+                    <img src="${p.imagen_url}" alt="${p.nombre}" class="product-img" onerror="this.src='https://via.placeholder.com/80?text=No+Img'">
+                    <div class="product-info">
+                        <h3>${p.nombre}</h3>
+                        <p style="margin:0; font-size:0.85rem; color:#666;">${p.descripcion || ''}</p>
+                        <strong style="color:var(--primary);">$${parseInt(p.precio).toLocaleString('es-CL')}</strong>
+                    </div>
+                    <button class="delete-btn" onclick="deleteProducto('${p.id}')" title="Eliminar Producto">
+                        <span class="material-symbols-outlined">delete</span> Borrar
+                    </button>
+                </div>
+                `;
+            });
+            productosContainer.innerHTML = html;
+        }
+
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = "Guardando...";
+
+            const { error } = await _supabase.from('productos').insert([{
+                nombre: document.getElementById('prodNombre').value,
+                precio: document.getElementById('prodPrecio').value,
+                imagen_url: document.getElementById('prodImagen').value,
+                descripcion: document.getElementById('prodDesc').value
+            }]);
+
+            if (error) alert('Error guardando el producto: ' + error.message);
+            
+            btn.disabled = false;
+            btn.textContent = "Guardar Producto";
+            productForm.reset();
+            loadProductos();
+        });
+
+        async function deleteProducto(id) {
+            if(confirm("¿Eliminar este producto de la tienda?")) {
+                const { error } = await _supabase.from('productos').delete().eq('id', id);
+                if(error) alert('Error eliminando producto');
+                else loadProductos();
             }
         }
     </script>
