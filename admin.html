@@ -8,7 +8,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Zip & Download Support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
         :root {
             --primary: #FF69B4;
@@ -327,30 +331,34 @@
             border-radius: var(--radius-md);
             background: #fff;
         }
-        .upload-preview.active { display: flex; }
+        /* Marketing Lab v2 */
+        .mkt-preview-card img { width: 100%; height: 100%; object-fit: contain; background: #000; }
+        .mkt-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        .btn-mkt { flex: 1; padding: 0.8rem; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: transform 0.2s; }
+        .btn-mkt-download { background: #25D366; color: #fff; }
+        .btn-mkt-save { background: var(--accent-yellow); color: var(--charcoal); }
+        .btn-mkt:hover { transform: scale(1.02); }
 
-        /* Marketing Hub Previews */
-        .marketing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem; }
-        .mkt-preview-card { background: #000; color: #fff; border-radius: 20px; overflow: hidden; width: 320px; height: 570px; margin: 0 auto; position: relative; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 8px solid #1a1a1a; }
-        .mkt-preview-title { font-size: 0.8rem; color: #888; text-align: center; margin-bottom: 0.5rem; font-weight: 700; text-transform: uppercase; }
-        
-        /* Instagram Mock */
-        .ig-header { padding: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; background: #fff; color: #000;}
-        .ig-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); }
-        .ig-image { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #eee; }
-        .ig-footer { padding: 10px; background: #fff; color: #000; font-size: 0.8rem; height: 100%; }
-        .ig-icons { display: flex; gap: 12px; margin-bottom: 8px; font-size: 1.2rem; }
-        
-        /* TikTok Mock */
-        .tt-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); }
-        .tt-user { font-weight: 700; margin-bottom: 5px; display: block; }
-        .tt-desc { font-size: 0.85rem; line-height: 1.3; margin-bottom: 10px; }
-        .tt-tags { color: #fe2c55; font-weight: 700; }
-        .tt-sidebar { position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
-        .tt-icon-circle { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; }
+        /* Carousel Lab */
+        .carousel-lab { background: #fff; padding: 1.5rem; border-radius: var(--radius-xl); border: 3px solid var(--accent-yellow); margin-top: 2rem; }
+        .carousel-selector { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 1rem; margin: 1.5rem 0; max-height: 300px; overflow-y: auto; padding: 10px; background: #fafafa; border-radius: 10px; }
+        .carousel-item-pick { position: relative; cursor: pointer; border: 3px solid transparent; border-radius: 10px; overflow: hidden; transition: all 0.2s; }
+        .carousel-item-pick.selected { border-color: var(--primary); transform: scale(0.95); }
+        .carousel-item-pick img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .carousel-item-pick::after { content: '\e876'; font-family: 'Material Symbols Outlined'; position: absolute; top: 5px; right: 5px; background: var(--primary); color: #fff; border-radius: 50%; width: 20px; height: 20px; display: none; align-items: center; justify-content: center; font-size: 12px; }
+        .carousel-item-pick.selected::after { display: flex; }
 
-        .copy-box { background: var(--bg-soft); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--primary); margin-top: 1rem; position: relative; }
-        .btn-copy { position: absolute; top: 0.5rem; right: 0.5rem; background: var(--primary); color: #fff; border: none; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer; }
+        /* Asset Gallery */
+        .asset-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .asset-item { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #eee; position: relative; }
+        .asset-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .asset-item-actions { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); padding: 5px; display: flex; justify-content: center; gap: 5px; opacity: 0; transition: opacity 0.2s; }
+        .asset-item:hover .asset-item-actions { opacity: 1; }
+        .btn-asset { background: #fff; border: none; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 0.7rem; }
+        
+        /* Vibrant Touches */
+        .vibrant-bg { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); color: #fff !important; }
+        .vibrant-card { border: none; box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2); }
     </style>
 </head>
 <body>
@@ -485,7 +493,7 @@
             <div class="marketing-grid">
                 <!-- Preview Instagram -->
                 <div>
-                    <div class="mkt-preview-title">Vista previa Instagram</div>
+                    <div class="mkt-preview-title">Preview Instagram (Post)</div>
                     <div class="mkt-preview-card" style="height: auto; min-height: 500px;">
                         <div class="ig-header">
                             <div class="ig-avatar"></div>
@@ -499,21 +507,25 @@
                                 <span class="material-symbols-outlined">send</span>
                             </div>
                             <div id="mktIgCaption" style="line-height:1.4">
-                                <strong>queglam_original</strong> ¡Luce radiante! ✨ <br>Nuestras extensiones son calidad premium.
+                                <strong>queglam_original</strong> ¡Luce radiante! ✨
                             </div>
                         </div>
                     </div>
+                    <div class="mkt-actions">
+                        <button class="btn-mkt btn-mkt-download" onclick="downloadPreview('mktIgImg')"><span class="material-symbols-outlined">download</span> Bajar</button>
+                        <button class="btn-mkt btn-mkt-save" onclick="saveToGallery('ig')"><span class="material-symbols-outlined">bookmark</span> Guardar</button>
+                    </div>
                     <div class="copy-box">
                         <button class="btn-copy" onclick="copyMktText('mktIgCaptionText')">COPIAR</button>
-                        <div id="mktIgCaptionText" style="font-size: 0.9rem;">Cargando copy...</div>
+                        <div id="mktIgCaptionText" style="font-size: 0.9rem;">...</div>
                     </div>
                 </div>
 
                 <!-- Preview TikTok -->
                 <div>
-                    <div class="mkt-preview-title">Vista previa TikTok / Reels</div>
-                    <div class="mkt-preview-card">
-                        <img id="mktTtImg" src="https://via.placeholder.com/400?text=Selecciona+un+producto" style="width:100%; height:100%; object-define:cover;">
+                    <div class="mkt-preview-title">Preview TikTok / Reels</div>
+                    <div class="mkt-preview-card" id="ttFrame">
+                        <img id="mktTtImg" src="https://via.placeholder.com/400?text=Selecciona+un+producto">
                         <div class="tt-sidebar">
                             <div class="tt-icon-circle"><span class="material-symbols-outlined">favorite</span></div>
                             <div class="tt-icon-circle"><span class="material-symbols-outlined">chat_bubble</span></div>
@@ -522,27 +534,44 @@
                         <div class="tt-overlay">
                             <span class="tt-user">@queglam</span>
                             <div class="tt-desc" id="mktTtDesc">
-                                ¿Buscas un cambio de look radical? 💖 <br>Mira este resultado.
-                                <div class="tt-tags">#hair #extensions #chile #glam</div>
+                                ¿Buscas un cambio de look radical? 💖
+                                <div class="tt-tags">#hair #glam</div>
                             </div>
                         </div>
                     </div>
+                    <div class="mkt-actions">
+                        <button class="btn-mkt btn-mkt-download" onclick="downloadPreview('mktTtImg')"><span class="material-symbols-outlined">download</span> Bajar</button>
+                        <button class="btn-mkt btn-mkt-save" onclick="saveToGallery('tt')"><span class="material-symbols-outlined">bookmark</span> Guardar</button>
+                    </div>
                     <div class="copy-box">
                         <button class="btn-copy" onclick="copyMktText('mktTtDescText')">COPIAR</button>
-                        <div id="mktTtDescText" style="font-size: 0.9rem;">Cargando copy para video...</div>
+                        <div id="mktTtDescText" style="font-size: 0.9rem;">...</div>
                     </div>
                 </div>
             </div>
+
+            <!-- Carrusel Lab -->
+            <div class="carousel-lab">
+                <h2 style="display:flex; align-items:center; gap:0.5rem;"><span class="material-symbols-outlined" style="color:var(--primary)">burst_mode</span> Generador de Carruseles (.ZIP)</h2>
+                <p>Selecciona las fotos que quieres incluir en tu carrusel y descárgalas todas de una en un archivo ZIP listo para publicar.</p>
+                
+                <div class="carousel-selector" id="carouselPicker">
+                    <!-- Se llena con productos y galeria -->
+                </div>
+                
+                <button class="btn" style="width:100%; padding: 1.2rem; background: var(--primary); font-size:1.1rem" id="btnExportZip" onclick="exportCarouselZip()">
+                    <span class="material-symbols-outlined">folder_zip</span> Exportar Carrusel para Instagram (.zip)
+                </button>
+            </div>
             
-            <div class="card" style="margin-top:2rem; text-align:center;">
-                <h3>🎨 Galería de Inspiración</h3>
-                <p>Usa estas imágenes de alta calidad generadas por IA para tus campañas:</p>
-                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:1rem; margin-top:1rem;">
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgZjgN99qbDRiFipF-o1S0k9NgiEYjGNZRX1-w3Y5kBsI1zjFd-2e50jZlGTgBxcHlTDLCIOno3QvWRbozQVLkZ4UudcWuXH9bcBo_jAUG0VbocJpiYVX4Gpqa5qP3OzLYDSnJ1rO-HN3Oxgp2jLAFWRwdt1XGIm5Pm6vrSXPirjJt4ZEUNkxnH-dEl4zSnpIG4a69eBoLp0-nrUeyUv3YUVLJ8O1cjKLIvocqMCxTEPyuByF698nt4nCzQPsDVnFnLwyVXlRUcWE" style="width:100%; border-radius:10px; cursor:pointer;" onclick="setMktImg(this.src)">
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAHUuDWWcdFrX8l2kqHobYHua0jBHA015nTFwEx0-_Y90GyorK66ZFkFHbME_NsyPVeFlfvNcJzJM-QXFoc0YxF6PxRP-YrtqASnprLRXQhmnaQ2sXeBNz3VjYKGlu9mQ5cCRrf5FzhinaClKYdijEFVPOGg8zMdzu7zYhrPGiopmwQVbv8g6XXpI_eE3B-N3LUfk--XRoCQSlPkQRSwmu81KSCgyl0j9w9T_8bDvEdiUlSt9A-FmacmwOG3nEDzLi9bDiNgM56oU" style="width:100%; border-radius:10px; cursor:pointer;" onclick="setMktImg(this.src)">
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOd7DD7ckSptL5nlKZDNG9g68DmVZb9_wZNGdhjeLF7uK8y3qOdjVRuZYjjGWcgzaZv5xSwUnhx_cpBRMa3ibws5B8Tr8TAM0FoOHlcGd1OWNzkEJ2OGZcOReMOy7wwA0lnLZEXjdA7Wzo-p9tmc_IDKi_3cWzkw8Wso-iw23u5qUlxdLujjue7oWxMOV_wMYLq72y9mir5bmLfTfQXo9CvulgdF-qUh7fVB675fBJSql3YQx-d8OPT5p0sBn1Sqz9tYxNsyiXWtA" style="width:100%; border-radius:10px; cursor:pointer;" onclick="setMktImg(this.src)">
+            <div class="card" style="margin-top:2rem;">
+                <h2 style="display:flex; align-items:center; gap:0.5rem;"><span class="material-symbols-outlined" style="color:var(--accent-yellow)">collections</span> Mi Biblioteca de Marketing</h2>
+                <p>Imágenes guardadas y plantillas listas para usar.</p>
+                <div class="asset-gallery" id="assetGallery">
+                    <!-- Assets guardados -->
                 </div>
             </div>
+        </div>
         </div>
 
     </div>
@@ -976,6 +1005,117 @@
 
         // Init marketing tab
         updateMktProductSelect();
+        loadAssets();
+
+        // ================= MARKETING LAB v2 =================
+        let selectedCarouselIds = new Set();
+        let galleryAssets = [];
+
+        async function loadAssets() {
+            const container = document.getElementById('assetGallery');
+            const picker = document.getElementById('carouselPicker');
+            
+            // Usamos productos como base y buscaremos en la tabla de assets (si existe)
+            const { data: prods } = await _supabase.from('productos').select('*');
+            
+            // Mock de galeria (puedes crear la tabla 'marketing_assets' en Supabase para persistencia real)
+            const mockAssets = [
+                { id: 'ia1', imagen_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAgZjgN99qbDRiFipF-o1S0k9NgiEYjGNZRX1-w3Y5kBsI1zjFd-2e50jZlGTgBxcHlTDLCIOno3QvWRbozQVLkZ4UudcWuXH9bcBo_jAUG0VbocJpiYVX4Gpqa5qP3OzLYDSnJ1rO-HN3Oxgp2jLAFWRwdt1XGIm5Pm6vrSXPirjJt4ZEUNkxnH-dEl4zSnpIG4a69eBoLp0-nrUeyUv3YUVLJ8O1cjKLIvocqMCxTEPyuByF698nt4nCzQPsDVnFnLwyVXlRUcWE', nombre: 'IA Promo 1' },
+                { id: 'ia2', imagen_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCAHUuDWWcdFrX8l2kqHobYHua0jBHA015nTFwEx0-_Y90GyorK66ZFkFHbME_NsyPVeFlfvNcJzJM-QXFoc0YxF6PxRP-YrtqASnprLRXQhmnaQ2sXeBNz3VjYKGlu9mQ5cCRrf5FzhinaClKYdijEFVPOGg8zMdzu7zYhrPGiopmwQVbv8g6XXpI_eE3B-N3LUfk--XRoCQSlPkQRSwmu81KSCgyl0j9w9T_8bDvEdiUlSt9A-FmacmwOG3nEDzLi9bDiNgM56oU', nombre: 'IA Promo 2' }
+            ];
+
+            const allImages = [...(prods || []), ...mockAssets];
+            galleryAssets = allImages;
+
+            let gallHtml = '';
+            let pickHtml = '';
+            
+            allImages.forEach(a => {
+                gallHtml += `
+                    <div class="asset-item">
+                        <img src="${a.imagen_url}" alt="asset">
+                        <div class="asset-item-actions">
+                            <button class="btn-asset" onclick="setMktImg('${a.imagen_url}')">Usar</button>
+                            <button class="btn-asset" onclick="downloadPreviewUrl('${a.imagen_url}')">Descargar</button>
+                        </div>
+                    </div>
+                `;
+                pickHtml += `
+                    <div class="carousel-item-pick" id="pick-${a.id}" onclick="toggleCarouselPick('${a.id}')">
+                        <img src="${a.imagen_url}">
+                    </div>
+                `;
+            });
+
+            container.innerHTML = gallHtml || 'No hay assets guardados.';
+            picker.innerHTML = pickHtml;
+        }
+
+        window.toggleCarouselPick = function(id) {
+            const el = document.getElementById('pick-' + id);
+            if(selectedCarouselIds.has(id)) {
+                selectedCarouselIds.delete(id);
+                el.classList.remove('selected');
+            } else {
+                selectedCarouselIds.add(id);
+                el.classList.add('selected');
+            }
+        }
+
+        window.downloadPreview = function(imgId) {
+            const src = document.getElementById(imgId).src;
+            downloadPreviewUrl(src, 'queglam_marketing_post.jpg');
+        }
+
+        window.downloadPreviewUrl = function(url, filename = 'queglam_image.jpg') {
+            saveAs(url, filename);
+        }
+
+        window.saveToGallery = async function(type) {
+            const src = (type === 'ig') ? document.getElementById('mktIgImg').src : document.getElementById('mktTtImg').src;
+            alert("¡Imagen guardada en tu biblioteca de marketing! (Simulado - Para persistencia real necesitas la tabla marketing_assets)");
+            // Aquí iría el insert a Supabase
+        }
+
+        window.exportCarouselZip = async function() {
+            if(selectedCarouselIds.size === 0) {
+                alert("Selecciona al menos una imagen para el carrusel.");
+                return;
+            }
+
+            const btn = document.getElementById('btnExportZip');
+            btn.innerText = "Preparando ZIP...";
+            btn.disabled = true;
+
+            const zip = new JSZip();
+            const folder = zip.folder("queglam_carrusel");
+            
+            const ids = Array.from(selectedCarouselIds);
+            let count = 0;
+
+            for(let id of ids) {
+                const asset = galleryAssets.find(a => a.id === id);
+                if(asset) {
+                    try {
+                        const response = await fetch(asset.imagen_url);
+                        const blob = await response.blob();
+                        folder.file(`imagen_${count+1}.jpg`, blob);
+                        count++;
+                    } catch(e) { console.error("Error zipping image", e); }
+                }
+            }
+
+            folder.file("instrucciones.txt", "¡Hola Euse! Aquí tienes las fotos para tu carrusel. \nRecuerda usar los textos sugeridos en el Marketing Lab para tus captions. \n\n¡A brillar! ✨");
+
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                saveAs(content, "carrusel_queglam.zip");
+                btn.innerText = "¡ZIP Descargado!";
+                setTimeout(() => {
+                    btn.innerText = "Exportar Carrusel para Instagram (.zip)";
+                    btn.disabled = false;
+                }, 3000);
+            });
+        }
 
         async function deleteProducto(id) {
             if(confirm("¿Eliminar este producto de la tienda?")) {
