@@ -328,6 +328,29 @@
             background: #fff;
         }
         .upload-preview.active { display: flex; }
+
+        /* Marketing Hub Previews */
+        .marketing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem; }
+        .mkt-preview-card { background: #000; color: #fff; border-radius: 20px; overflow: hidden; width: 320px; height: 570px; margin: 0 auto; position: relative; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 8px solid #1a1a1a; }
+        .mkt-preview-title { font-size: 0.8rem; color: #888; text-align: center; margin-bottom: 0.5rem; font-weight: 700; text-transform: uppercase; }
+        
+        /* Instagram Mock */
+        .ig-header { padding: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; background: #fff; color: #000;}
+        .ig-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); }
+        .ig-image { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #eee; }
+        .ig-footer { padding: 10px; background: #fff; color: #000; font-size: 0.8rem; height: 100%; }
+        .ig-icons { display: flex; gap: 12px; margin-bottom: 8px; font-size: 1.2rem; }
+        
+        /* TikTok Mock */
+        .tt-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); }
+        .tt-user { font-weight: 700; margin-bottom: 5px; display: block; }
+        .tt-desc { font-size: 0.85rem; line-height: 1.3; margin-bottom: 10px; }
+        .tt-tags { color: #fe2c55; font-weight: 700; }
+        .tt-sidebar { position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        .tt-icon-circle { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; }
+
+        .copy-box { background: var(--bg-soft); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--primary); margin-top: 1rem; position: relative; }
+        .btn-copy { position: absolute; top: 0.5rem; right: 0.5rem; background: var(--primary); color: #fff; border: none; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -354,6 +377,7 @@
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('reservas')" id="tab-reservas"><span class="material-symbols-outlined">calendar_month</span> Calendario</button>
             <button class="tab-btn" onclick="switchTab('tienda')" id="tab-tienda"><span class="material-symbols-outlined">shopping_bag</span> Mi Tienda</button>
+            <button class="tab-btn" onclick="switchTab('marketing')" id="tab-marketing"><span class="material-symbols-outlined">auto_awesome</span> Marketing Lab</button>
         </div>
 
         <!-- Vista Reservas -->
@@ -431,6 +455,93 @@
             <div class="card">
                 <h2>Catálogo de Productos Actual</h2>
                 <div id="productosContainer" class="loading">Cargando productos...</div>
+            </div>
+        </div>
+
+        <!-- Vista Marketing -->
+        <div id="view-marketing" class="view-section">
+            <div class="card" style="background: linear-gradient(135deg, #fff 0%, #fff0f5 100%); border: 2px solid var(--primary);">
+                <h2 style="color: var(--primary);"><span class="material-symbols-outlined">rocket_launch</span> Generador de Contenido Sublime</h2>
+                <p>Elige un producto y deja que la magia ocurra. Crearemos la publicación perfecta para tus redes.</p>
+                
+                <div class="form-row" style="margin-top: 2rem;">
+                    <div class="form-group" style="flex: 2;">
+                        <label>1. Selecciona el Producto/Servicio</label>
+                        <select id="mktProductSelect" onchange="updateMktPreview()">
+                            <option value="">Cargando productos...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>2. Tono de Voz</label>
+                        <select id="mktVibe" onchange="updateMktPreview()">
+                            <option value="elegante">Elegante y Premium</option>
+                            <option value="divertido">Divertido y Cercano</option>
+                            <option value="oferta">¡Oferta Imbatible!</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="marketing-grid">
+                <!-- Preview Instagram -->
+                <div>
+                    <div class="mkt-preview-title">Vista previa Instagram</div>
+                    <div class="mkt-preview-card" style="height: auto; min-height: 500px;">
+                        <div class="ig-header">
+                            <div class="ig-avatar"></div>
+                            <span>¡Qué Glam! Hair</span>
+                        </div>
+                        <img id="mktIgImg" class="ig-image" src="https://via.placeholder.com/400?text=Selecciona+un+producto" alt="Post preview">
+                        <div class="ig-footer">
+                            <div class="ig-icons">
+                                <span class="material-symbols-outlined">favorite</span>
+                                <span class="material-symbols-outlined">chat_bubble</span>
+                                <span class="material-symbols-outlined">send</span>
+                            </div>
+                            <div id="mktIgCaption" style="line-height:1.4">
+                                <strong>queglam_original</strong> ¡Luce radiante! ✨ <br>Nuestras extensiones son calidad premium.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copy-box">
+                        <button class="btn-copy" onclick="copyMktText('mktIgCaptionText')">COPIAR</button>
+                        <div id="mktIgCaptionText" style="font-size: 0.9rem;">Cargando copy...</div>
+                    </div>
+                </div>
+
+                <!-- Preview TikTok -->
+                <div>
+                    <div class="mkt-preview-title">Vista previa TikTok / Reels</div>
+                    <div class="mkt-preview-card">
+                        <img id="mktTtImg" src="https://via.placeholder.com/400?text=Selecciona+un+producto" style="width:100%; height:100%; object-define:cover;">
+                        <div class="tt-sidebar">
+                            <div class="tt-icon-circle"><span class="material-symbols-outlined">favorite</span></div>
+                            <div class="tt-icon-circle"><span class="material-symbols-outlined">chat_bubble</span></div>
+                            <div class="tt-icon-circle"><span class="material-symbols-outlined">share</span></div>
+                        </div>
+                        <div class="tt-overlay">
+                            <span class="tt-user">@queglam</span>
+                            <div class="tt-desc" id="mktTtDesc">
+                                ¿Buscas un cambio de look radical? 💖 <br>Mira este resultado.
+                                <div class="tt-tags">#hair #extensions #chile #glam</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="copy-box">
+                        <button class="btn-copy" onclick="copyMktText('mktTtDescText')">COPIAR</button>
+                        <div id="mktTtDescText" style="font-size: 0.9rem;">Cargando copy para video...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top:2rem; text-align:center;">
+                <h3>🎨 Galería de Inspiración</h3>
+                <p>Usa estas imágenes de alta calidad generadas por IA para tus campañas:</p>
+                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:1rem; margin-top:1rem;">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgZjgN99qbDRiFipF-o1S0k9NgiEYjGNZRX1-w3Y5kBsI1zjFd-2e50jZlGTgBxcHlTDLCIOno3QvWRbozQVLkZ4UudcWuXH9bcBo_jAUG0VbocJpiYVX4Gpqa5qP3OzLYDSnJ1rO-HN3Oxgp2jLAFWRwdt1XGIm5Pm6vrSXPirjJt4ZEUNkxnH-dEl4zSnpIG4a69eBoLp0-nrUeyUv3YUVLJ8O1cjKLIvocqMCxTEPyuByF698nt4nCzQPsDVnFnLwyVXlRUcWE" style="width:100%; border-radius:10px; cursor:pointer;" onclick="setMktImg(this.src)">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAHUuDWWcdFrX8l2kqHobYHua0jBHA015nTFwEx0-_Y90GyorK66ZFkFHbME_NsyPVeFlfvNcJzJM-QXFoc0YxF6PxRP-YrtqASnprLRXQhmnaQ2sXeBNz3VjYKGlu9mQ5cCRrf5FzhinaClKYdijEFVPOGg8zMdzu7zYhrPGiopmwQVbv8g6XXpI_eE3B-N3LUfk--XRoCQSlPkQRSwmu81KSCgyl0j9w9T_8bDvEdiUlSt9A-FmacmwOG3nEDzLi9bDiNgM56oU" style="width:100%; border-radius:10px; cursor:pointer;" onclick="setMktImg(this.src)">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOd7DD7ckSptL5nlKZDNG9g68DmVZb9_wZNGdhjeLF7uK8y3qOdjVRuZYjjGWcgzaZv5xSwUnhx_cpBRMa3ibws5B8Tr8TAM0FoOHlcGd1OWNzkEJ2OGZcOReMOy7wwA0lnLZEXjdA7Wzo-p9tmc_IDKi_3cWzkw8Wso-iw23u5qUlxdLujjue7oWxMOV_wMYLq72y9mir5bmLfTfQXo9CvulgdF-qUh7fVB675fBJSql3YQx-d8OPT5p0sBn1Sqz9tYxNsyiXWtA" style="width:100%; border-radius:10px; cursor:pointer;" onclick="setMktImg(this.src)">
+                </div>
             </div>
         </div>
 
@@ -806,7 +917,65 @@
             productForm.reset();
             removeImage(); // Reiniciar drop zone
             loadProductos();
+            updateMktProductSelect();
         });
+
+        // ================= MARKETING LAB LOGIC =================
+        let fullProductList = [];
+        
+        async function updateMktProductSelect() {
+            const select = document.getElementById('mktProductSelect');
+            const { data } = await _supabase.from('productos').select('*');
+            if(data) {
+                fullProductList = data;
+                let html = '<option value="">-- Elige un producto --</option>';
+                data.forEach(p => html += `<option value="${p.id}">${p.nombre}</option>`);
+                select.innerHTML = html;
+            }
+        }
+
+        window.setMktImg = function(src) {
+            document.getElementById('mktIgImg').src = src;
+            document.getElementById('mktTtImg').src = src;
+        }
+
+        window.updateMktPreview = function() {
+            const prodId = document.getElementById('mktProductSelect').value;
+            const vibe = document.getElementById('mktVibe').value;
+            const prod = fullProductList.find(p => p.id === prodId);
+            
+            if(!prod) return;
+
+            setMktImg(prod.imagen_url);
+
+            const copies = {
+                elegante: {
+                    ig: `<strong>queglam_original</strong> Redefine tu elegancia con ${prod.nombre}. ✨ Calidad superior para mujeres que no aceptan menos. <br><br>#Lujo #HairStyle #ExtensionesPremium`,
+                    tt: `La sofisticación que tu cabello merece. 💖 Descubre ${prod.nombre}. #Viral #Beauty`
+                },
+                divertido: {
+                    ig: `<strong>queglam_original</strong> ¡Pelo largo y actitud al 100%! 💁‍♀️ Dile hola a tu nueva versión con ${prod.nombre}. ¿Lista para brillar? <br><br>#CambioDeLook #HairGoals`,
+                    tt: `POV: Te sientes la protagonista con tus nuevas extensiones. 😂🔥 #HairCare #Funny`
+                },
+                oferta: {
+                    ig: `<strong>queglam_original</strong> 🚨 ¡PROMO ALERT! 🚨 Consigue ${prod.nombre} a un precio que no creerás. Solo por tiempo limitado. <br><br>#Oferta #CyberHair #Descuento`,
+                    tt: `¡No te quedes fuera! 😱 Aprovecha el mejor precio en ${prod.nombre}. #Sale #Chile`
+                }
+            };
+
+            document.getElementById('mktIgCaption').innerHTML = copies[vibe].ig;
+            document.getElementById('mktIgCaptionText').innerText = copies[vibe].ig.replace(/<[^>]*>/g, '');
+            document.getElementById('mktTtDesc').innerHTML = copies[vibe].tt + '<div class="tt-tags">#hair #glam #chile</div>';
+            document.getElementById('mktTtDescText').innerText = copies[vibe].tt + " #hair #glam #chile";
+        }
+
+        window.copyMktText = function(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => alert("¡Texto copiado al portapapeles! 📋"));
+        }
+
+        // Init marketing tab
+        updateMktProductSelect();
 
         async function deleteProducto(id) {
             if(confirm("¿Eliminar este producto de la tienda?")) {
