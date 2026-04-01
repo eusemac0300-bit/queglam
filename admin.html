@@ -431,7 +431,7 @@
             background: var(--off-white);
             transition: all 0.3s;
         }
-        .upload-box-v4:hover { border-color: var(--gold); background: #fff; }
+        .upload-box-v4:hover, .upload-box-v4.dragover { border-color: var(--gold); background: #fff; }
         .upload-icon-circle {
             width: 60px;
             height: 60px;
@@ -619,14 +619,14 @@
         <div class="card">
             <h2><span class="material-symbols-outlined">block</span> Bloquear un Horario</h2>
             <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: #666;">Selecciona una fecha y un horario para tacharlo e impedir que las clientas puedan agendar.</p>
-            <form id="blockForm" class="form-row">
-                <div class="form-group">
+            <form id="blockForm" class="form-row" style="display: flex; flex-wrap: wrap; gap: 1rem; grid-template-columns: none;">
+                <div class="form-group" style="flex: 1; min-width: 200px;">
                     <label>Fecha a bloquear</label>
-                    <input type="date" id="blockFecha" required>
+                    <input type="date" id="blockFecha" required style="width: 100%;">
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="flex: 1; min-width: 200px;">
                     <label>Horario</label>
-                    <select id="blockHorario" required>
+                    <select id="blockHorario" required style="width: 100%;">
                         <option value="">Seleccione bloque</option>
                         <option value="Mañana (10:00 - 13:00)">Mañana (10:00 - 13:00)</option>
                         <option value="Tarde (14:00 - 17:00)">Tarde (14:00 - 17:00)</option>
@@ -634,7 +634,7 @@
                         <option value="TODO EL DIA">Día Completo (Bloquear Todos)</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-danger">Tachar Horario</button>
+                <button type="submit" class="btn btn-danger" style="align-self: flex-end; height: 46px; margin-bottom: 2px;">Tachar Horario</button>
             </form>
         </div>
 
@@ -721,13 +721,14 @@
 
                         <div class="mkt-v4-grid">
                             <!-- Col 1: Upload Box -->
-                            <div class="upload-box-v4" onclick="document.getElementById('mktImageUrl').focus()">
+                            <div class="upload-box-v4" id="mktDropZone" onclick="document.getElementById('mktImageFile').click()">
                                 <div class="upload-icon-circle">
-                                    <span class="material-symbols-outlined">cloud_upload</span>
+                                    <span class="material-symbols-outlined" id="mktIconV4">cloud_upload</span>
                                 </div>
-                                <p><strong>Arrastra tu contenido aquí</strong></p>
-                                <p style="font-size: 0.75rem; color: #888; max-width: 200px;">O selecciona una imagen de tu galería (PNG, JPG, MP4)</p>
-                                <button class="btn" style="background:#f0f0f0; color:#333; font-size: 0.7rem; padding: 0.5rem 1rem; border-radius: 8px;">Examinar Archivos</button>
+                                <p><strong id="mktPromptV4">Arrastra tu contenido aquí</strong></p>
+                                <p style="font-size: 0.75rem; color: #888; max-width: 200px;">O selecciona una imagen de tu galería (PNG, JPG, WEBP)</p>
+                                <button type="button" class="btn" style="background:#f0f0f0; color:#333; font-size: 0.7rem; padding: 0.5rem 1rem; border-radius: 8px;">Examinar Archivos</button>
+                                <input type="file" id="mktImageFile" accept="image/png, image/jpeg, image/webp" style="display: none;">
                             </div>
 
                             <!-- Col 2: Config -->
@@ -1239,10 +1240,51 @@
 
         // ================= MARKETING LAB v4: LUMINOUS EDITORIAL =================
         let mktTypeV4 = 'Reel';
+        const mktDropZone = document.getElementById('mktDropZone');
+        const mktImageFile = document.getElementById('mktImageFile');
+        const mktImageUrl = document.getElementById('mktImageUrl');
+        const mktPromptV4 = document.getElementById('mktPromptV4');
+        const mktIconV4 = document.getElementById('mktIconV4');
+
+        // Drag & Drop Marketing Lab
+        mktDropZone.addEventListener('dragover', (e) => { e.preventDefault(); mktDropZone.classList.add('dragover'); });
+        mktDropZone.addEventListener('dragleave', (e) => { e.preventDefault(); mktDropZone.classList.remove('dragover'); });
+        mktDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            mktDropZone.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) processMktFile(e.dataTransfer.files[0]);
+        });
+        mktImageFile.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) processMktFile(e.target.files[0]);
+        });
+
+        function processMktFile(file) {
+            if (!file.type.startsWith('image/')) { alert("Por favor, sube solo imágenes."); return; }
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_WIDTH = 800; const MAX_HEIGHT = 800;
+                    let width = img.width; let height = img.height;
+                    if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+                    else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+                    canvas.width = width; canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    mktImageUrl.value = dataUrl; // Ponemos el base64 en el input de URL
+                    mktPromptV4.textContent = "¡Imagen cargada con éxito! ✨";
+                    mktIconV4.textContent = "check_circle";
+                    mktIconV4.style.color = "var(--gold)";
+                    mktDropZone.style.borderColor = "var(--gold)";
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
 
         function setMktSubView(view) {
-            // Logica para cambiar sub-vistas si fuera necesario (Create, Results, etc)
-            // Por ahora, el mockup muestra todo en una sola pantalla "Crear"
             console.log("Cambiando a sub-view:", view);
             document.querySelectorAll('.mkt-side-btn').forEach(btn => btn.classList.remove('active'));
             event.currentTarget.classList.add('active');
@@ -1256,11 +1298,12 @@
 
         async function runAiMarketingV4() {
             const technique = document.getElementById('mktTechnique').value;
+            const contentType = mktTypeV4;
             const imageUrl = document.getElementById('mktImageUrl').value;
             const btn = document.getElementById('btnMagicV4');
             
             if(!imageUrl) {
-                alert("Euse, por favor ingresa una URL de imagen para que la IA haga su magia ✨");
+                alert("Euse, por favor selecciona una imagen o ingresa una URL para que la IA haga su magia ✨");
                 return;
             }
 
@@ -1268,21 +1311,52 @@
             btn.innerHTML = `<span class="material-symbols-outlined spin" style="animation: spin 2s linear infinite;">sync</span> GENERANDO...`;
             
             try {
-                // Simulamos la espera de la IA
+                // Simulamos la espera de la IA con variaciones según técnica y tipo
                 await new Promise(r => setTimeout(r, 2000));
                 
-                // Actualizamos los campos con "Magia"
-                document.getElementById('resHookV4').innerText = `"¿Buscas un cambio radical con ${technique}? ✨ Mira lo que logramos hoy..."`;
-                document.getElementById('resBodyV4').innerText = `Aplicación profesional de ${technique}. Resultado natural, ligero y con el brillo característico de ¡Qué Glam!.`;
-                document.getElementById('resCtaV4').innerText = `Comenta 'CABELLO' para enviarte toda la información y precios por DM.`;
-                document.getElementById('resAudioV4').innerText = `Luxury Hair Vibe - Official (Trending Audio)`;
+                const variations = {
+                    'Punto Americano': {
+                        hook: `"¿Cansada de esperar años para tener el largo de tus sueños con Punto Americano? 😱 Mira esto..."`,
+                        body: `Mostramos el proceso real de aplicación Punto Americano. Indoloro y natural.`,
+                        cta: `"Comenta 'GLAM' y agenda tu diagnóstico capilar gratuito hoy mismo."`
+                    },
+                    'Microchip': {
+                        hook: `"¿Buscas volumen y discreción total? La técnica de Microchip es para ti ✨"`,
+                        body: `Nuestra aplicación de Microchip garantiza un movimiento natural sin dañar tu raíz.`,
+                        cta: `"Envíanos un DM para cotizar tu cambio de look."`
+                    },
+                    'Nudo Brasileño': {
+                        hook: `"La resistencia y belleza del Nudo Brasileño en ¡Qué Glam! 🇧🇷✨"`,
+                        body: `Técnica artesanal para un resultado duradero y orgánico.`,
+                        cta: `"Reserva tu hora directo en el link de nuestra Bio."`
+                    },
+                    'Adhesivas Premium': {
+                        hook: `"¡Cambio de look en tiempo récord! ⏱️ Descubre las Adhesivas Premium."`,
+                        body: `Extensiones ultra delgadas, imperceptibles al tacto y a la vista.`,
+                        cta: `"Agenda hoy y luce radiante esta misma semana."`
+                    }
+                };
+
+                const content = variations[technique] || variations['Punto Americano'];
                 
-                // Imágenes de previsualización (usando la misma URL para el ejemplo)
+                // Ajuste según tipo de contenido
+                let prefix = "";
+                if(contentType === 'Reel') prefix = "🎬 Reel Script: ";
+                if(contentType === 'Post') prefix = "📸 Post: ";
+                if(contentType === 'Carousel_Trans') prefix = "🎠 Carrusel (Antes/Después): ";
+                if(contentType === 'Carousel_Edu') prefix = "📖 Carrusel Tips: ";
+
+                document.getElementById('resHookV4').innerText = `${prefix}${content.hook}`;
+                document.getElementById('resBodyV4').innerText = content.body;
+                document.getElementById('resCtaV4').innerText = content.cta;
+                document.getElementById('resAudioV4').innerText = contentType === 'Reel' ? `Luxury Hair Vibe - Official (Trending Audio)` : "N/A (Static Post)";
+                
+                // Imágenes de previsualización
                 document.getElementById('previewS1').src = imageUrl;
                 document.getElementById('previewS2').src = imageUrl;
                 document.getElementById('previewS3').src = imageUrl;
 
-                document.getElementById('resCaptionV4').innerText = `✨ Transformación ¡Qué Glam! ✨\n\n¿Lista para el largo de tus sueños con la técnica ${technique}? Cuidamos cada detalle para que luzcas increíble.\n\n📍 Servicio a domicilio en Santiago\n✅ Calidad Premium garantizada\n\n#QueGlam #Extensiones #PeloLindo #Santiago #Belleza #HairGoals`;
+                document.getElementById('resCaptionV4').innerText = `✨ Transformación ¡Qué Glam! ✨\n\n¿Lista para el largo de tus sueños con la técnica ${technique}? Cuidamos cada detalle para que luzcas increíble.\n\n📍 Servicio a domicilio en Santiago\n✅ Calidad Premium garantizada\n\n#QueGlam #Extensiones #PeloLindo #Santiago #Belleza #HairGoals #${technique.replace(/\s/g,'')}`;
 
                 alert("¡Magia generada con éxito, Euse! ✨");
 
