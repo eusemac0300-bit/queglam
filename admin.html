@@ -1060,6 +1060,10 @@
                                         <input type="range" id="mktHookSize" min="30" max="100" value="60" style="width: 100%;" oninput="renderMktCanvas()">
                                     </div>
                                     <div>
+                                        <label style="font-size: 0.6rem; margin-bottom: 0.3rem;">Tamaño Logo Top</label>
+                                        <input type="range" id="mktLogoSize" min="15" max="60" value="35" style="width: 100%;" oninput="renderMktCanvas()">
+                                    </div>
+                                    <div>
                                         <label style="font-size: 0.6rem; margin-bottom: 0.3rem;">Posición Cierre (Y)</label>
                                         <input type="range" id="mktCtaPos" min="0.8" max="0.98" step="0.01" value="0.92" style="width: 100%;" oninput="renderMktCanvas()">
                                     </div>
@@ -1687,6 +1691,7 @@
             // Controles dinámicos
             const hookYScale = parseFloat(document.getElementById('mktHookPos')?.value || 0.75);
             const hookBaseSize = parseInt(document.getElementById('mktHookSize')?.value || 60);
+            const logoSize = parseInt(document.getElementById('mktLogoSize')?.value || 35);
             const ctaYScale = parseFloat(document.getElementById('mktCtaPos')?.value || 0.92);
             const overlayAlpha = parseFloat(document.getElementById('mktOverlay')?.value || 0.7);
 
@@ -1713,9 +1718,9 @@
                 ctx.fillStyle = gr;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Logo Top
+                // Logo Top Adaptable
                 ctx.fillStyle = "#FF69B4";
-                ctx.font = "900 35px Nunito, sans-serif";
+                ctx.font = `900 ${logoSize}px Nunito, sans-serif`;
                 ctx.textAlign = "center";
                 ctx.fillText("¡QUÉ GLAM!", canvas.width / 2, 80);
 
