@@ -779,8 +779,18 @@
             font-size: 0.7rem;
             color: #888;
         }
-        .ai-card-v4 p[contenteditable="true"]:hover { border-color: var(--gold) !important; background: #fffaf0; }
-        .ai-card-v4 p[contenteditable="true"]:focus { border-color: var(--gold) !important; border-style: solid !important; background: #fffaf0; }
+        /* Marketing Lab ULTIMATE Layout */
+        .mkt-lab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        @media (max-width: 1024px) { .mkt-lab-grid { grid-template-columns: 1fr; } }
+        .mkt-controls-side { display: flex; flex-direction: column; gap: 1rem; }
+        .mkt-preview-side { position: sticky; top: 1rem; background: var(--charcoal); padding: 1.5rem; border-radius: 20px; box-shadow: var(--shadow-lg); color: white; }
+        .ai-card-v4 { padding: 0.8rem !important; border-radius: 12px !important; margin-bottom: 0.5rem !important; background: white; border: 1px solid #eee; }
+        .ai-card-v4 h4 { font-size: 0.7rem !important; margin-bottom: 0.3rem !important; }
+        .ai-card-v4 p { font-size: 0.8rem !important; line-height: 1.2 !important; }
+        .mkt-controls-compact { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: #fdfdfd; padding: 1rem; border-radius: 12px; border: 1px solid #eee; }
+        .mkt-controls-compact label { font-size: 0.6rem; margin-bottom: 0.2rem; display: block; font-weight: 700; color: #555; }
+        .mkt-btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+        .mkt-preview-title { font-size: 0.9rem; font-weight: 800; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
     </style>
 </head>
 
