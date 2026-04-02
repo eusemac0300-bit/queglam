@@ -957,21 +957,29 @@
                             <div id="mktResultsV4">
                                 <div class="ai-cards-v4">
                                     <div class="ai-card-v4" style="border-left: 4px solid var(--gold); background: white;">
-                                        <h4 style="color:var(--gold); display:flex; justify-content:space-between;">GANCHO (HOOK) ✏️ 
-                                            <span class="material-symbols-outlined" style="font-size: 0.8rem; cursor:pointer;" onclick="copySimpleText(document.getElementById('resHookV4').innerText)">content_copy</span>
+                                        <h4 style="color:var(--gold); display:flex; justify-content:space-between; align-items:center;">
+                                            GANCHO (HOOK) ✏️ 
+                                            <div style="display:flex; gap: 8px;">
+                                                <span class="material-symbols-outlined" style="font-size: 1.1rem; cursor:pointer; color: var(--gold);" title="Nueva Idea IA" onclick="regeneratePartV4('hook')">lightbulb</span>
+                                                <span class="material-symbols-outlined" style="font-size: 0.9rem; cursor:pointer; opacity: 0.5;" onclick="copySimpleText(document.getElementById('resHookV4').innerText)">content_copy</span>
+                                            </div>
                                         </h4>
-                                        <p id="resHookV4" contenteditable="true" oninput="renderMktCanvas()" style="font-weight: 700; outline: none; min-height: 40px;"></p>
+                                        <p id="resHookV4" contenteditable="true" oninput="renderMktCanvas()" style="font-weight: 700; outline: none; min-height: 40px; font-size: 0.85rem; line-height: 1.3;"></p>
                                     </div>
-                                    <div class="ai-card-v4" style="background: #fdfdfd; opacity: 0.8;">
-                                        <h4 style="font-size: 0.65rem;">BODY (IA) 💡</h4>
-                                        <p id="resBodyV4" contenteditable="true" style="font-size: 0.7rem; color: #555; outline: none;"></p>
-                                        <button class="btn" style="padding: 2px 6px; font-size: 0.6rem; margin-top: 5px;" onclick="applyToHook(document.getElementById('resBodyV4').innerText)">Pasar a Foto 🆙</button>
+                                    <div class="ai-card-v4" style="background: #fdfdfd; opacity: 0.8; padding: 0.6rem;">
+                                        <h4 style="font-size: 0.6rem; margin-bottom: 4px;">BODY / COPIA 💡</h4>
+                                        <p id="resBodyV4" contenteditable="true" style="font-size: 0.65rem; color: #555; outline: none; line-height: 1.2;"></p>
+                                        <button class="btn" style="padding: 2px 6px; font-size: 0.55rem; margin-top: 4px; border-radius: 4px;" onclick="applyToHook(document.getElementById('resBodyV4').innerText)">Pasar a Foto 🆙</button>
                                     </div>
                                     <div class="ai-card-v4" style="border-left: 4px solid var(--charcoal); background: white;">
-                                        <h4 style="color:var(--charcoal); display:flex; justify-content:space-between;">CIERRE (CTA) ✏️
-                                            <span class="material-symbols-outlined" style="font-size: 0.8rem; cursor:pointer;" onclick="copySimpleText(document.getElementById('resCtaV4').innerText)">content_copy</span>
+                                        <h4 style="color:var(--charcoal); display:flex; justify-content:space-between; align-items:center;">
+                                            CIERRE (CTA) ✏️
+                                            <div style="display:flex; gap: 8px;">
+                                                <span class="material-symbols-outlined" style="font-size: 1.1rem; cursor:pointer; color: var(--charcoal);" title="Nueva Idea IA" onclick="regeneratePartV4('cta')">lightbulb</span>
+                                                <span class="material-symbols-outlined" style="font-size: 0.9rem; cursor:pointer; opacity: 0.5;" onclick="copySimpleText(document.getElementById('resCtaV4').innerText)">content_copy</span>
+                                            </div>
                                         </h4>
-                                        <p id="resCtaV4" contenteditable="true" oninput="renderMktCanvas()" style="font-weight: 700; outline: none; min-height: 40px;"></p>
+                                        <p id="resCtaV4" contenteditable="true" oninput="renderMktCanvas()" style="font-weight: 700; outline: none; min-height: 35px; font-size: 0.85rem;"></p>
                                     </div>
                                 </div>
 
@@ -1104,42 +1112,6 @@
                             </div>
                         </div>
 
-                        <!-- Quick Replies Section (Inside Content) -->
-                        <div class="qr-section-v4">
-                            <h3>🚀 Respuestas Rápidas para Clientes</h3>
-                            <div class="qr-grid-v4" id="quickRepliesV4">
-                                <div class="qr-item-v4"
-                                    onclick="copySimpleText('📍 Estamos ubicados en Santiago, RM. Servicio 100% a domicilio.')">
-                                    <div class="qr-icon"><span class="material-symbols-outlined">location_on</span>
-                                    </div>
-                                    <div class="qr-info">
-                                        <h4>Cobertura y Ubicación</h4>
-                                        <p>Clic para Copiar</p>
-                                    </div>
-                                </div>
-                                <div class="qr-item-v4">
-                                    <div class="qr-icon"><span class="material-symbols-outlined">payments</span></div>
-                                    <div class="qr-info">
-                                        <h4>Métodos de Pago</h4>
-                                        <p>Clic para Copiar</p>
-                                    </div>
-                                </div>
-                                <div class="qr-item-v4">
-                                    <div class="qr-icon"><span class="material-symbols-outlined">calendar_today</span>
-                                    </div>
-                                    <div class="qr-info">
-                                        <h4>Agendar Cita</h4>
-                                        <p>Clic para Copiar</p>
-                                    </div>
-                                </div>
-                                <div class="qr-item-v4">
-                                    <div class="qr-icon"><span class="material-symbols-outlined">sparkles</span></div>
-                                    <div class="qr-info">
-                                        <h4>Cuidados Post-Aplicación</h4>
-                                        <p>Clic para Copiar</p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1579,6 +1551,58 @@
             el.classList.add('active');
         }
 
+        async function regeneratePartV4(part) {
+            const technique = document.getElementById('mktTechnique').value;
+            const targetEl = part === 'hook' ? document.getElementById('resHookV4') : document.getElementById('resCtaV4');
+            
+            const pool = {
+                'Punto Americano': {
+                    hooks: [
+                        `"¿Cansada de esperar años para un cabello largo? Punto Americano es la solución 😱"`,
+                        `"¡La transformación que estabas buscando llegó a ¡Qué Glam! ✨"`,
+                        `"Mira el secreto detrás de una melena envidiable con Punto Americano 🎀"`,
+                        `"¿Cabello corto y sin vida? Deja que el Punto Americano haga magia por ti 🪄"`
+                    ],
+                    ctas: [
+                        `"Comenta 'PUNTO' para cobrar tu descuento de lanzamiento."`,
+                        `"¡Agenda hoy y luce increíble este fin de semana! 🗓️"`,
+                        `"¿Te gustaría este resultado? Cuéntanos en los comentarios 👇"`,
+                        `"¡Reserva tu hora directo en el link de nuestra Bio! 💎"`
+                    ]
+                },
+                'Microchip': {
+                    hooks: [
+                        `"Volumen y discreción absoluta: El poder de la técnica Microchip ✨"`,
+                        `"¿Quieres extensiones pero temes que se noten? Prueba el Microchip 🤫"`,
+                        `"La técnica más amada por quienes buscan naturalidad total 🌿"`,
+                        `"No es magia, es Microchip en ¡Qué Glam! 🪄💎"`
+                    ],
+                    ctas: [
+                        `"Mándanos un mensajito para evaluarte gratis hoy mismo."`,
+                        `"¡Dale vida a tu cabello! Agenda tu evaluación personalizada."`,
+                        `"Síguenos para más transformaciones increíbles 💇‍♀️"`,
+                        `"Cotiza tu cambio de look al WhatsApp del perfil 📲"`
+                    ]
+                }
+            };
+
+            const data = pool[technique] || pool['Punto Americano'];
+            const choices = part === 'hook' ? data.hooks : data.ctas;
+            const randomPick = choices[Math.floor(Math.random() * choices.length)];
+
+            targetEl.classList.add('flash-gold');
+            setTimeout(() => targetEl.classList.remove('flash-gold'), 500);
+
+            let prefix = "";
+            if (part === 'hook') {
+                if (mktTypeV4 === 'Reel') prefix = "🎬 Reel: ";
+                if (mktTypeV4 === 'Post') prefix = "📸 Post: ";
+            }
+            
+            targetEl.innerText = `${prefix}${randomPick}`;
+            renderMktCanvas();
+        }
+
         async function runAiMarketingV4() {
             const technique = document.getElementById('mktTechnique').value;
             const contentType = mktTypeV4;
@@ -1586,69 +1610,52 @@
             const btn = document.getElementById('btnMagicV4');
 
             if (!imageUrl) {
-                alert("Euse, por favor selecciona una imagen o ingresa una URL para que la IA haga su magia ✨");
+                alert("Euse, por favor selecciona una imagen primero ✨");
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = `<span class="material-symbols-outlined spin" style="animation: spin 2s linear infinite;">sync</span> GENERANDO...`;
+            btn.innerHTML = `<span class="material-symbols-outlined spin">sync</span>`;
 
             try {
-                // Simulamos la espera de la IA con variaciones según técnica y tipo
-                await new Promise(r => setTimeout(r, 2000));
+                await new Promise(r => setTimeout(r, 1500));
 
                 const variations = {
                     'Punto Americano': {
-                        hook: `"¿Cansada de esperar años para tener el largo de tus sueños con Punto Americano? 😱 Mira esto..."`,
-                        body: `Mostramos el proceso real de aplicación Punto Americano. Indoloro y natural.`,
-                        cta: `"Comenta 'GLAM' y agenda tu diagnóstico capilar gratuito hoy mismo."`
+                        hook: `"¿Cansada de esperar años para un largo de sueños? El Punto Americano es el secreto 😱"`,
+                        body: `Mostramos el proceso real. Sin dolor, resultado orgánico y natural.`,
+                        cta: `"Dile 'SÍ' al largo premium. Agenda tu diagnóstico capilar gratuito."`
                     },
                     'Microchip': {
-                        hook: `"¿Buscas volumen y discreción total? La técnica de Microchip es para ti ✨"`,
-                        body: `Nuestra aplicación de Microchip garantiza un movimiento natural sin dañar tu raíz.`,
-                        cta: `"Envíanos un DM para cotizar tu cambio de look."`
+                        hook: `"¿Volumen y discreción total? El Microchip es la técnica que necesitas ✨"`,
+                        body: `Aplicación imperceptible que protege tu cabello natural.`,
+                        cta: `"¡Cotiza tu cambio de look hoy mismo por DM!"`
                     },
                     'Nudo Brasileño': {
-                        hook: `"La resistencia y belleza del Nudo Brasileño en ¡Qué Glam! 🇧🇷✨"`,
-                        body: `Técnica artesanal para un resultado duradero y orgánico.`,
-                        cta: `"Reserva tu hora directo en el link de nuestra Bio."`
-                    },
-                    'Adhesivas Premium': {
-                        hook: `"¡Cambio de look en tiempo récord! ⏱️ Descubre las Adhesivas Premium."`,
-                        body: `Extensiones ultra delgadas, imperceptibles al tacto y a la vista.`,
-                        cta: `"Agenda hoy y luce radiante esta misma semana."`
+                        hook: `"Resistencia y belleza artesanal con nuestro Nudo Brasileño 🇧🇷✨"`,
+                        body: `Raíces firmes y volumen espectacular por meses.`,
+                        cta: `"¡Reserva tu hora en el link de la Bio!"`
                     }
                 };
 
                 const content = variations[technique] || variations['Punto Americano'];
 
-                // Ajuste según tipo de contenido
                 let prefix = "";
-                if (contentType === 'Reel') prefix = "🎬 Reel Script: ";
+                if (contentType === 'Reel') prefix = "🎬 Reel: ";
                 if (contentType === 'Post') prefix = "📸 Post: ";
-                if (contentType === 'Carousel_Trans') prefix = "🎠 Carrusel (Antes/Después): ";
-                if (contentType === 'Carousel_Edu') prefix = "📖 Carrusel Tips: ";
 
                 document.getElementById('resHookV4').innerText = `${prefix}${content.hook}`;
                 document.getElementById('resBodyV4').innerText = content.body;
                 document.getElementById('resCtaV4').innerText = content.cta;
-                document.getElementById('resAudioV4').innerText = contentType === 'Reel' ? `Luxury Hair Vibe - Official (Trending Audio)` : "N/A (Static Post)";
-
-                // Imágenes de previsualización
-                document.getElementById('previewS1').src = imageUrl;
-                document.getElementById('previewS2').src = imageUrl;
-                document.getElementById('previewS3').src = imageUrl;
-
-                document.getElementById('resCaptionV4').innerText = `✨ Transformación ¡Qué Glam! ✨\n\n¿Lista para el largo de tus sueños con la técnica ${technique}? Cuidamos cada detalle para que luzcas increíble.\n\n📍 Servicio a domicilio en Santiago\n✅ Calidad Premium garantizada\n\n#QueGlam #Extensiones #PeloLindo #Santiago #Belleza #HairGoals #${technique.replace(/\s/g, '')}`;
-
-                alert("¡Magia generada con éxito, Euse! ✨");
+                
+                document.getElementById('resCaptionV4').innerText = `✨ Transformación ¡Qué Glam! ✨\n\n¿Lista para el largo de tus sueños? Técnica ${technique}.\n\n#QueGlam #${technique.replace(/\s/g, '')}`;
 
             } catch (error) {
                 console.error(error);
-                alert("Hubo un pequeño problema técnico con la magia. Inténtalo de nuevo.");
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = `Generar Magia ✨`;
+                btn.innerHTML = `<span class="material-symbols-outlined">auto_awesome</span> ¡MAGIA CON IA!`;
+                renderMktCanvas();
             }
         }
 
