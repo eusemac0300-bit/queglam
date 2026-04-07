@@ -20,12 +20,17 @@
             /* Luminous Editorial Palette */
             --gold: #C5A059;
             --gold-light: #DFD3B3;
+            --gold-gradient: linear-gradient(135deg, #A68045, #C5A059);
+            --pink: #FF69B4;
+            --pink-gradient: linear-gradient(135deg, #FF69B4, #D4145A);
             --charcoal: #1A1A1A;
             --charcoal-soft: #333333;
             --off-white: #FAF9F6;
             --pure-white: #FFFFFF;
             --gray-light: #F1F1F1;
             --gray-medium: #E2E8F0;
+            --white: #FFFFFF;
+            --bg-soft: #F8F9FA;
             --primary: var(--gold);
             --primary-dark: #A68045;
             --radius-lg: 1.5rem;
@@ -34,6 +39,7 @@
             --font: 'Nunito', sans-serif;
             --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.15);
         }
 
         body {
@@ -915,7 +921,7 @@
             </div>
         </div>
 
-        <!-- Vista Marketing: AI STUDIO v4 LUMINOUS -->
+        <!-- Vista Marketing: AI STUDIO v4.1 ULTIMATE -->
         <div id="view-marketing" class="view-section">
             <div class="mkt-v4-container">
                 <!-- Sidebar Interno -->
@@ -938,168 +944,121 @@
 
                 <!-- Main Content Area -->
                 <div class="mkt-content">
-                    <div id="mkt-subview-create" class="mkt-lab-grid" style="padding: 1.5rem; gap: 2rem;">
-                        <!-- Col 1: Editor Maestro -->
+                    <div id="mkt-subview-create" class="mkt-lab-grid">
+                        
+                        <!-- Col 1: Editor Panel -->
                         <div class="mkt-controls-side">
-                            <div class="mkt-v4-header" style="margin-bottom: 1rem;">
-                                <h2 style="font-size: 1.2rem;">✨ Studio ¡Qué Glam! ULTIMATE</h2>
-                                <p style="font-size: 0.75rem;">Diseño editorial para Redes Sociales.</p>
+                            <div class="mkt-v4-header" style="margin-bottom: 1.5rem;">
+                                <h1 style="font-size: 1.6rem; color: var(--charcoal); margin:0;">✨ Studio ¡Qué Glam! <span style="color:var(--pink); font-size:0.8rem; font-weight:900;">ULTIMATE</span></h1>
+                                <p style="font-size: 0.8rem; color: #888;">Diseña contenido editorial de alto impacto con IA.</p>
                             </div>
 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                                <div class="upload-box-v4" id="mktDropZone" onclick="document.getElementById('mktImageFile').click()" style="padding: 1rem; min-height: 100px;">
-                                    <span class="material-symbols-outlined" style="font-size: 2rem; color: var(--gold);">add_photo_alternate</span>
-                                    <p style="font-size: 0.65rem; font-weight: 700;">SUBIR FOTO</p>
+                            <!-- Acciones Rápidas -->
+                            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div class="upload-box-v4" id="mktDropZone" onclick="document.getElementById('mktImageFile').click()" style="padding: 1.2rem; min-height: 120px; cursor: pointer; border: 2px dashed var(--gold-light);">
+                                    <span class="material-symbols-outlined" style="font-size: 2.2rem; color: var(--gold);">add_photo_alternate</span>
+                                    <p style="font-size: 0.75rem; font-weight: 800; margin-top: 0.5rem; color: var(--gold);">SUBIR FOTO ORIGINAL</p>
                                     <input type="file" id="mktImageFile" style="display: none" accept="image/*">
                                     <input type="hidden" id="mktImageUrl">
                                 </div>
-                                <button id="btnMagicV4" class="btn" onclick="runAiMarketingV4()" style="background: var(--pink-gradient); border-radius: 12px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(255,105,180,0.25);">
-                                    <span class="material-symbols-outlined">auto_awesome</span> ¡MAGIA CON IA!
+                                <button id="btnMagicV4" class="btn" onclick="runAiMarketingV4()" style="background: var(--pink-gradient); border-radius: 12px; font-weight: 900; font-size: 0.9rem; box-shadow: 0 10px 20px rgba(255,105,180,0.3); color: white; display:flex; flex-direction:column; justify-content:center; gap: 0.5rem;">
+                                    <span class="material-symbols-outlined" style="font-size: 1.8rem;">auto_awesome</span>
+                                    GENERAR MAGIA IA
                                 </button>
                             </div>
 
-                            <div id="mktResultsV4">
-                                <div class="ai-cards-v4">
-                                    <div class="ai-card-v4" style="border-left: 4px solid var(--gold); background: white;">
-                                        <h4 style="color:var(--gold); display:flex; justify-content:space-between; align-items:center;">
-                                            GANCHO (HOOK) ✏️ 
-                                            <div style="display:flex; gap: 8px;">
-                                                <span class="material-symbols-outlined" style="font-size: 1.1rem; cursor:pointer; color: var(--gold);" title="Nueva Idea IA" onclick="regeneratePartV4('hook')">lightbulb</span>
-                                                <span class="material-symbols-outlined" style="font-size: 0.9rem; cursor:pointer; opacity: 0.5;" onclick="copySimpleText(document.getElementById('resHookV4').innerText)">content_copy</span>
-                                            </div>
-                                        </h4>
-                                        <p id="resHookV4" contenteditable="true" oninput="renderMktCanvas()" style="font-weight: 700; outline: none; min-height: 40px; font-size: 0.85rem; line-height: 1.3;"></p>
-                                    </div>
-                                    <div class="ai-card-v4" style="background: #fdfdfd; opacity: 0.8; padding: 0.6rem;">
-                                        <h4 style="font-size: 0.6rem; margin-bottom: 4px;">BODY / COPIA 💡</h4>
-                                        <p id="resBodyV4" contenteditable="true" style="font-size: 0.65rem; color: #555; outline: none; line-height: 1.2;"></p>
-                                        <button class="btn" style="padding: 2px 6px; font-size: 0.55rem; margin-top: 4px; border-radius: 4px;" onclick="applyToHook(document.getElementById('resBodyV4').innerText)">Pasar a Foto 🆙</button>
-                                    </div>
-                                    <div class="ai-card-v4" style="border-left: 4px solid var(--charcoal); background: white;">
-                                        <h4 style="color:var(--charcoal); display:flex; justify-content:space-between; align-items:center;">
-                                            CIERRE (CTA) ✏️
-                                            <div style="display:flex; gap: 8px;">
-                                                <span class="material-symbols-outlined" style="font-size: 1.1rem; cursor:pointer; color: var(--charcoal);" title="Nueva Idea IA" onclick="regeneratePartV4('cta')">lightbulb</span>
-                                                <span class="material-symbols-outlined" style="font-size: 0.9rem; cursor:pointer; opacity: 0.5;" onclick="copySimpleText(document.getElementById('resCtaV4').innerText)">content_copy</span>
-                                            </div>
-                                        </h4>
-                                        <p id="resCtaV4" contenteditable="true" oninput="renderMktCanvas()" style="font-weight: 700; outline: none; min-height: 35px; font-size: 0.85rem;"></p>
-                                    </div>
+                            <!-- Configuración de Diseño -->
+                            <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                                
+                                <div class="mkt-control-group">
+                                    <label>Técnica Destacada ✂️</label>
+                                    <select id="mktTechnique" class="mkt-dropdown-v4" onchange="renderMktCanvas()">
+                                        <option value="Punto Americano">Punto Americano</option>
+                                        <option value="Microchip">Microchip (Invisible)</option>
+                                        <option value="Nudo Brasileño">Nudo Brasileño</option>
+                                        <option value="Extensiones de Keratina">Keratina Premium</option>
+                                        <option value="Nano Ring">Nano Ring Tech</option>
+                                    </select>
                                 </div>
 
-                                <div class="mkt-controls-compact" style="margin-top: 1rem;">
-                                    <div style="grid-column: span 2; border-bottom: 1px solid #eee; padding-bottom: 0.4rem;">
-                                        <label>TÍTULO EN IMAGEN 🎀</label>
-                                        <input type="text" id="mktLogoText" value="¡QUÉ GLAM!" style="width: 100%; font-size: 0.85rem; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-weight: 800; color: var(--pink);" oninput="renderMktCanvas()">
-                                    </div>
-                                    <div><label>POS. TÍTULO (Y)</label><input type="range" id="mktLogoPos" min="20" max="300" value="80" oninput="renderMktCanvas()"></div>
-                                    <div><label>TAM. TÍTULO</label><input type="range" id="mktLogoSize" min="10" max="80" value="35" oninput="renderMktCanvas()"></div>
-                                    <div><label>POS. GANCHO (Y)</label><input type="range" id="mktHookPos" min="0.4" max="0.9" step="0.01" value="0.75" oninput="renderMktCanvas()"></div>
-                                    <div><label>TAM. GANCHO</label><input type="range" id="mktHookSize" min="20" max="100" value="60" oninput="renderMktCanvas()"></div>
-                                    <div><label>POS. CIERRE (Y)</label><input type="range" id="mktCtaPos" min="0.8" max="0.98" step="0.01" value="0.92" oninput="renderMktCanvas()"></div>
-                                    <div><label>Sombra (Overlay)</label><input type="range" id="mktOverlay" min="0" max="1" step="0.05" value="0.7" oninput="renderMktCanvas()"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Col 2: Preview Fijo -->
-                        <div class="mkt-preview-side" style="margin-top: 0;">
-                            <div class="mkt-preview-title">✅ DISEÑO TERMINADO</div>
-                            
-                            <div id="mktPreviewPlaceholder" style="background: rgba(255,255,255,0.03); aspect-ratio: 1080/1350; border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #555;">
-                                <span class="material-symbols-outlined" style="font-size: 2rem;">image</span>
-                                <p style="font-size: 0.65rem;">EL PREVIEW APARECERÁ AQUÍ</p>
-                            </div>
-
-                            <div id="mktPreviewContainer" style="display: none; box-shadow: 0 20px 80px rgba(0,0,0,0.8); border-radius: 8px; overflow: hidden;">
-                                <img id="mktRealPreview" src="" style="width: 100%; display: block;">
-                            </div>
-
-                            <button class="btn" style="width: 100%; margin-top: 1.5rem; background: var(--gold-gradient); color: white; padding: 1.2rem; font-weight: 900; box-shadow: 0 10px 40px rgba(0,0,0,0.4);" onclick="downloadMktImage()">
-                                <span class="material-symbols-outlined">download</span> DESCARGAR PARA INSTAGRAM
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                                </div>
-                            </div>
-
-                            <div class="mkt-control-group">
-                                <label>Control de Posición y Tamaño 📏</label>
-                                <div style="background: var(--off-white); padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                                    <div>
-                                        <label style="font-size: 0.6rem; margin-bottom: 0.3rem;">Posición Gancho (Y)</label>
-                                        <input type="range" id="mktHookPos" min="0.4" max="0.9" step="0.01" value="0.75" style="width: 100%;" oninput="renderMktCanvas()">
-                                    </div>
-                                    <div>
-                                        <label style="font-size: 0.6rem; margin-bottom: 0.3rem;">Tamaño Letra Hook</label>
-                                        <input type="range" id="mktHookSize" min="30" max="100" value="60" style="width: 100%;" oninput="renderMktCanvas()">
-                                    </div>
-                                    <div>
-                                        <label style="font-size: 0.6rem; margin-bottom: 0.3rem;">Tamaño Logo Top</label>
-                                        <input type="range" id="mktLogoSize" min="15" max="60" value="35" style="width: 100%;" oninput="renderMktCanvas()">
-                                    </div>
-                                    <div>
-                                        <label style="font-size: 0.6rem; margin-bottom: 0.3rem;">Posición Cierre (Y)</label>
-                                        <input type="range" id="mktCtaPos" min="0.8" max="0.98" step="0.01" value="0.92" style="width: 100%;" oninput="renderMktCanvas()">
-                                    </div>
-                                    <div>
-                                        <label style="font-size: 0.6rem; margin-bottom: 0.3rem;">Brillo Fondo (Overlay)</label>
-                                        <input type="range" id="mktOverlay" min="0" max="1" step="0.1" value="0.7" style="width: 100%;" oninput="renderMktCanvas()">
-                                    </div>
-                                    <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 0.3rem; background: rgba(0,0,0,0.05); padding: 0.5rem; border-radius: 8px;">
-                                        <label style="font-size: 0.6rem; font-weight: 800;">Texto Logo Superior ✏️</label>
-                                        <input type="text" id="mktLogoText" value="¡QUÉ GLAM!" style="width: 100%; border: 1px solid #ddd; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;" oninput="renderMktCanvas()">
-                                        <div style="display:flex; gap: 1rem; margin-top: 5px;">
-                                            <div style="flex:1">
-                                                <label style="font-size: 0.5rem; color: #666;">Posición Y</label>
-                                                <input type="range" id="mktLogoPos" min="20" max="300" value="80" style="width: 100%;" oninput="renderMktCanvas()">
-                                            </div>
-                                            <div style="flex:1">
-                                                <label style="font-size: 0.5rem; color: #666;">Tamaño Logo</label>
-                                                <input type="range" id="mktLogoSize_Slider" min="15" max="100" value="35" style="width: 100%;" oninput="renderMktCanvas()">
+                                <!-- Text Preview Cards -->
+                                <div class="ai-cards-v4" style="grid-template-columns: 1fr; gap: 0.8rem;">
+                                    <div class="ai-card-v4" style="border-left: 5px solid var(--gold);">
+                                        <div class="card-top">
+                                            <label>GANCHO (HOOK) 🪝</label>
+                                            <div style="display:flex; gap: 12px;">
+                                                <span class="material-symbols-outlined" style="font-size: 1.2rem; cursor:pointer;" title="Re-generar" onclick="regeneratePartV4('hook')">refresh</span>
+                                                <span class="material-symbols-outlined" style="font-size: 1.1rem; cursor:pointer; opacity: 0.5;" onclick="copySimpleText(document.getElementById('resHookV4').innerText)">content_copy</span>
                                             </div>
                                         </div>
+                                        <p id="resHookV4" contenteditable="true" oninput="renderMktCanvas()" style="font-weight: 700; outline: none; min-height: 40px; font-size: 1rem; color: #1a1a1a;"></p>
+                                    </div>
+
+                                    <div class="ai-card-v4" style="border-left: 5px solid var(--charcoal);">
+                                        <div class="card-top">
+                                            <label>CIERRE (CTA) 🎯</label>
+                                            <div style="display:flex; gap: 12px;">
+                                                <span class="material-symbols-outlined" style="font-size: 1.2rem; cursor:pointer;" title="Re-generar" onclick="regeneratePartV4('cta')">refresh</span>
+                                                <span class="material-symbols-outlined" style="font-size: 1.1rem; cursor:pointer; opacity: 0.5;" onclick="copySimpleText(document.getElementById('resCtaV4').innerText)">content_copy</span>
+                                            </div>
+                                        </div>
+                                        <p id="resCtaV4" contenteditable="true" oninput="renderMktCanvas()" style="font-weight: 700; outline: none; min-height: 35px; font-size: 0.9rem; color: #444;"></p>
                                     </div>
                                 </div>
+
+                                <!-- Control Sliders Panel -->
+                                <div class="mkt-controls-compact" style="background: #f8f9fa; padding: 1.5rem; border-radius: 15px;">
+                                    <div style="grid-column: span 2;">
+                                        <label>TÍTULO EN IMAGEN 🎀</label>
+                                        <input type="text" id="mktLogoText" value="¡QUÉ GLAM!" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-weight: 900; color: var(--pink); text-align:center;" oninput="renderMktCanvas()">
+                                    </div>
+                                    <div><label>POS. TÍTULO</label><input type="range" id="mktLogoPos" min="20" max="300" value="80" oninput="renderMktCanvas()"></div>
+                                    <div><label>TAM. TÍTULO</label><input type="range" id="mktLogoSize" min="15" max="100" value="45" oninput="renderMktCanvas()"></div>
+                                    <div><label>POS. GANCHO</label><input type="range" id="mktHookPos" min="0.3" max="0.9" step="0.01" value="0.75" oninput="renderMktCanvas()"></div>
+                                    <div><label>TAM. GANCHO</label><input type="range" id="mktHookSize" min="30" max="140" value="85" oninput="renderMktCanvas()"></div>
+                                    <div><label>POS. CIERRE</label><input type="range" id="mktCtaPos" min="0.8" max="0.98" step="0.01" value="0.92" oninput="renderMktCanvas()"></div>
+                                    <div><label>SOMBRA FONDO</label><input type="range" id="mktOverlay" min="0" max="1" step="0.05" value="0.75" oninput="renderMktCanvas()"></div>
+                                </div>
+
                             </div>
                         </div>
+
+                        <!-- Col 2: Preview Side -->
+                        <div class="mkt-preview-side">
+                            <div class="mkt-preview-title">
+                                <span class="material-symbols-outlined">instagram</span> POST DE INSTAGRAM (PREVIEW)
+                            </div>
+                            
+                            <div id="mktPreviewPlaceholder" style="background: rgba(255,255,255,0.05); aspect-ratio: 1080/1350; border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #888;">
+                                <span class="material-symbols-outlined" style="font-size: 4rem; opacity: 0.3;">photo_library</span>
+                                <p style="font-size: 0.8rem; font-weight: 700; margin-top: 1rem;">ESPERANDO TU FOTO...</p>
+                            </div>
+
+                            <div id="mktPreviewContainer" style="display: none; border-radius: 12px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.8); margin-bottom: 2rem;">
+                                <img id="mktRealPreview" src="" style="width: 100%; display: block; background: #000;">
+                            </div>
+
+                            <div class="caption-box-v4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                                <div class="caption-top">
+                                    <label>BODY / COPY / HASHTAGS</label>
+                                    <span style="font-size: 0.75rem; color: var(--gold); font-weight: 900; cursor: pointer; display:flex; align-items:center; gap:4px;" onclick="copySimpleText(document.getElementById('resCaptionV4').innerText)">
+                                        <span class="material-symbols-outlined" style="font-size: 1rem;">content_copy</span> COPIAR
+                                    </span>
+                                </div>
+                                <p id="resCaptionV4" style="font-size: 0.85rem; color: #ccc; line-height: 1.6; margin: 0; max-height: 120px; overflow-y: auto; font-style: italic;">
+                                    Aquí aparecerá el texto persuasivo para tu post...
+                                </p>
+                            </div>
+
+                            <button class="btn" onclick="downloadMktImage()" style="width: 100%; background: var(--gold-gradient); padding: 1.5rem; font-size: 1.1rem; border-radius: 15px; box-shadow: 0 15px 35px rgba(166,128,69,0.35);">
+                                <span class="material-symbols-outlined">download</span> DESCARGAR PARA INSTAGRAM (JPG)
+                            </button>
+                        </div>
+
                     </div>
                 </div>
-
-                            <div class="mkt-control-group">
-                                <label>Carrusel de Referencia (Story/Post)</label>
-                                <div class="carousel-preview-v4" id="carouselPreviewV4">
-                                    <div class="phone-frame"><span class="slide-num">1</span><img
-                                            src="https://via.placeholder.com/300x533/1A1A1A/FFFFFF?text=Slide+1"
-                                            id="previewS1"></div>
-                                    <div class="phone-frame"><span class="slide-num">2</span><img
-                                            src="https://via.placeholder.com/300x533/1A1A1A/FFFFFF?text=Slide+2"
-                                            id="previewS2"></div>
-                                    <div class="phone-frame"><span class="slide-num">3</span><img
-                                            src="https://via.placeholder.com/300x533/1A1A1A/FFFFFF?text=Slide+3"
-                                            id="previewS3"></div>
-                                </div>
-                            </div>
-
-                            <div class="caption-box-v4">
-                                <div class="caption-top">
-                                    <h4>Caption + Hashtags</h4>
-                                    <span
-                                        style="font-size: 0.75rem; color: var(--gold); font-weight: 800; cursor: pointer;"
-                                        onclick="copySimpleText(document.getElementById('resCaptionV4').innerText)">COPIAR
-                                        TODO</span>
-                                </div>
-                                <p id="resCaptionV4"
-                                    style="font-size: 0.85rem; color: #555; line-height: 1.6; margin: 0;">¡La
-                                    transformación que mereces está a un click! ✨ Nuestra técnica de Punto Americano no
-                                    solo añade largo, añade confianza. Realizada por expertos, cuidando siempre la salud
-                                    de tu cabello natural.\n\n#QueGlam #HairExtensions #PuntoAmericano #LuxuryHair
-                                    #SalonLife #CambioDeLook #HairGoals</p>
-                            </div>
-                        </div>
-
-                        </div>
+            </div>
+        </div>
                     </div>
                 </div>
             </div>
@@ -1134,6 +1093,20 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById('view-' + tabId).classList.add('active');
             document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        function setMktSubView(view) {
+            console.log("Cambiando a sub-view:", view);
+            document.querySelectorAll('.mkt-side-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Si tuviéramos más subviews, aquí haríamos el toggle de display
+            if (view === 'create') {
+                document.getElementById('mkt-subview-create').style.display = 'grid';
+            } else {
+                // Mensaje temporal para secciones no implementadas
+                alert("Esta sección estará disponible en la próxima actualización VIP ✨");
+            }
         }
 
         // Login Logic
@@ -1477,324 +1450,193 @@
             productForm.reset();
             removeImage(); // Reiniciar drop zone
             loadProductos();
-            updateMktProductSelect();
         });
 
-        // ================= MARKETING LAB v4: LUMINOUS EDITORIAL =================
-        let mktTypeV4 = 'Reel';
-        const mktDropZone = document.getElementById('mktDropZone');
-        const mktImageFile = document.getElementById('mktImageFile');
+        // ================= MARKETING LAB v4.5: ULTIMATE STUDIO =================
+        let mktTypeV4 = 'Post'; 
         const mktImageUrl = document.getElementById('mktImageUrl');
-        const mktPromptV4 = document.getElementById('mktPromptV4');
-        const mktIconV4 = document.getElementById('mktIconV4');
 
-        // Drag & Drop Marketing Lab
-        mktDropZone.addEventListener('dragover', (e) => { e.preventDefault(); mktDropZone.classList.add('dragover'); });
-        mktDropZone.addEventListener('dragleave', (e) => { e.preventDefault(); mktDropZone.classList.remove('dragover'); });
-        mktDropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            mktDropZone.classList.remove('dragover');
-            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) processMktFile(e.dataTransfer.files[0]);
-        });
-        mktImageFile.addEventListener('change', (e) => {
-            if (e.target.files && e.target.files.length > 0) processMktFile(e.target.files[0]);
-        });
-
-        function processMktFile(file) {
-            if (!file.type.startsWith('image/')) { alert("Por favor, sube solo imágenes."); return; }
+        // Logic for File Selection
+        window.processMktFile = function(file) {
+            if (!file || !file.type.startsWith('image/')) { 
+                alert("Euse, por favor sube solo imágenes. ✨"); 
+                return; 
+            }
+            
             const reader = new FileReader();
             reader.onload = function (event) {
                 const img = new Image();
                 img.onload = function () {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    const MAX_WIDTH = 800; const MAX_HEIGHT = 800;
-                    let width = img.width; let height = img.height;
-                    if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } }
-                    else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
-                    canvas.width = width; canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                    mktImageUrl.value = dataUrl; // Ponemos el base64 en el input de URL
-                    mktPromptV4.textContent = "¡Imagen cargada con éxito! ✨";
-                    mktIconV4.textContent = "check_circle";
-                    mktIconV4.style.color = "var(--gold)";
-                    mktDropZone.style.borderColor = "var(--gold)";
+                    
+                    const MAX_RES = 1600;
+                    let w = img.width; let h = img.height;
+                    if (w > MAX_RES) { h *= MAX_RES / w; w = MAX_RES; }
+                    
+                    canvas.width = w; canvas.height = h;
+                    ctx.drawImage(img, 0, 0, w, h);
+                    
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                    mktImageUrl.value = dataUrl;
+                    
+                    document.getElementById('mktPreviewPlaceholder').style.display = 'none';
+                    document.getElementById('mktPreviewContainer').style.display = 'block';
+                    
+                    renderMktCanvas();
                 };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        function setMktSubView(view) {
-            console.log("Cambiando a sub-view:", view);
-            document.querySelectorAll('.mkt-side-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
+        document.getElementById('mktImageFile')?.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) processMktFile(e.target.files[0]);
+        });
 
-        function setMktTypeV4(type, el) {
-            mktTypeV4 = type;
-            document.querySelectorAll('#mktTypeGridV4 .mkt-type-btn').forEach(btn => btn.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        async function regeneratePartV4(part) {
-            const technique = document.getElementById('mktTechnique').value;
-            const targetEl = part === 'hook' ? document.getElementById('resHookV4') : document.getElementById('resCtaV4');
-            
-            const pool = {
-                'Punto Americano': {
-                    hooks: [
-                        `"¿Cansada de esperar años para un cabello largo? Punto Americano es la solución 😱"`,
-                        `"¡La transformación que estabas buscando llegó a ¡Qué Glam! ✨"`,
-                        `"Mira el secreto detrás de una melena envidiable con Punto Americano 🎀"`,
-                        `"¿Cabello corto y sin vida? Deja que el Punto Americano haga magia por ti 🪄"`
-                    ],
-                    ctas: [
-                        `"Comenta 'PUNTO' para cobrar tu descuento de lanzamiento."`,
-                        `"¡Agenda hoy y luce increíble este fin de semana! 🗓️"`,
-                        `"¿Te gustaría este resultado? Cuéntanos en los comentarios 👇"`,
-                        `"¡Reserva tu hora directo en el link de nuestra Bio! 💎"`
-                    ]
-                },
-                'Microchip': {
-                    hooks: [
-                        `"Volumen y discreción absoluta: El poder de la técnica Microchip ✨"`,
-                        `"¿Quieres extensiones pero temes que se noten? Prueba el Microchip 🤫"`,
-                        `"La técnica más amada por quienes buscan naturalidad total 🌿"`,
-                        `"No es magia, es Microchip en ¡Qué Glam! 🪄💎"`
-                    ],
-                    ctas: [
-                        `"Mándanos un mensajito para evaluarte gratis hoy mismo."`,
-                        `"¡Dale vida a tu cabello! Agenda tu evaluación personalizada."`,
-                        `"Síguenos para más transformaciones increíbles 💇‍♀️"`,
-                        `"Cotiza tu cambio de look al WhatsApp del perfil 📲"`
-                    ]
-                }
-            };
-
-            const data = pool[technique] || pool['Punto Americano'];
-            const choices = part === 'hook' ? data.hooks : data.ctas;
-            const randomPick = choices[Math.floor(Math.random() * choices.length)];
-
-            targetEl.classList.add('flash-gold');
-            setTimeout(() => targetEl.classList.remove('flash-gold'), 500);
-
-            let prefix = "";
-            if (part === 'hook') {
-                if (mktTypeV4 === 'Reel') prefix = "🎬 Reel: ";
-                if (mktTypeV4 === 'Post') prefix = "📸 Post: ";
+        const AI_POOL = {
+            'Punto Americano': {
+                hooks: ["¿Cansada de esperar años para un cabello largo? Punto Americano es la solución ✨", "¡La transformación que buscabas llegó a ¡Qué Glam! 🎀", "Punto Americano: Máxima naturalidad y volumen instantáneo. 😱", "¿Cabello corto y sin vida? Deja que el Punto Americano haga magia. 🪄", "Resultados que enamoran: Melena XXL perfecta hoy mismo. 💎"],
+                ctas: ["Comenta 'QUIERO' para cobrar tu diagnóstico gratuito.", "¡Agenda hoy y luce increíble este fin de semana! 🗓️", "Cotiza tu cambio de look directo en el link de la Bio. 📲", "Dile adiós al cabello corto. ¡Escríbenos por DM! 💎", "¿Lista para tu mejor versión? Reserva tu hora aquí 👇"],
+                caption: `✨ TRANSFORMACIÓN PUNTO AMERICANO ✨\n\n¿Buscas el largo y volumen perfecto sin maltratar tu cabello? Nuestra técnica estrella de Punto Americano es la favorita de nuestras clientas por su naturalidad y durabilidad.\n\n#QueGlam #PuntoAmericano #ExtensionesDeCabello #Santiago`
+            },
+            'Microchip': {
+                hooks: ["Volumen y discreción absoluta: El poder de la técnica Microchip. 🤫✨", "¿Quieres extensiones pero temes que se noten? El Microchip es para ti.", "La técnica más amada por quienes buscan naturalidad total. 🌿", "No es magia, es la técnica Microchip invisible en ¡Qué Glam! 🪄💎", "Técnica imperceptible para una melena de impacto. 🎀"],
+                ctas: ["Mándanos un mensajito para evaluarte hoy mismo. 📩", "¡Dale vida a tu cabello! Agenda tu evaluación personalizada.", "Cotiza tu cambio al WhatsApp del perfil. ✨", "¿Lista para brillar? Agenda tu hora enviando un DM. 📲", "Síguenos para ver más cambios increíbles. 👇"],
+                caption: `💎 MICROCHIP: LA DISCRECIÓN HECHA ARTE 💎\n\nSi te preocupa que tus extensiones se noten, la técnica de Microchip es tu solución definitiva.\n\n#QueGlam #Microchip #ExtensionesInvisibles #HairStudio`
+            },
+            'Nudo Brasileño': {
+                hooks: ["Resistencia y belleza artesanal con nuestro Nudo Brasileño. 🇧🇷✨", "¿Buscas durabilidad y volumen extremo? Mira este resultado. 🤩", "La favorita para melenas con mucha personalidad y fuerza. 👑", "Belleza que dura: Descubre el secreto del Nudo Brasileño. 🪄", "Potencia tu mirada con una melena imponente y segura. 🦁💎"],
+                ctas: ["¡Reserva tu hora directo en el link de la Bio! 🗓️", "Comenta 'BRASIL' para enviarte toda la información. 📩", "¡Atrévete al cambio! Evaluaciones disponibles hoy.", "Agenda hoy tu transformación en ¡Qué Glam!. ✨", "Calidad y estilo en un solo lugar. ¡Escríbenos! 📲"],
+                caption: `🇧🇷 FUERZA Y BELLEZA: NUDO BRASILEÑO 🇧🇷\n\nAporta volumen y resistencia con un acabado artesanal.\n\n#QueGlam #NudoBrasileño #HairExtensions #VolumenCapilar`
+            },
+            'Extensiones de Keratina': {
+                hooks: ["Elegancia suprema: El método de las celebridades (Keratina Premium) 👑", "¿Quieres el acabado más lujoso? Keratina es la respuesta. ✨💎", "Unión perfecta y duradera. Así se ve la Keratina en ¡Qué Glam!. 🎀", "Naturalidad y confort sin límites para tu día a día. 💅", "El lujo de una melena perfecta todos los días. 🌟✨"],
+                ctas: ["¡Transforma tu look hoy! Agenda tu cupo por DM. 📲", "Consulta por nuestros paquetes Premium de Keratina. 💎", "Tu cabello merece lo mejor. ¡Reserva ahora! ✨", "¿Quieres este resultado? Haz click en el link de la Bio. 🖱️", "Calidad garantizada. 📩"],
+                caption: `👑 LUJO CAPILAR: KERATINA PREMIUM 👑\n\nEl estándar de oro en extensiones.\n\n#QueGlam #KeratinaPremium #LuxuryHair #SantiagoBeauty`
+            },
+            'Nano Ring': {
+                hooks: ["Tecnología Nano Ring: El futuro de las extensiones ya está aquí. 🚀✨", "Aros microscópicos para una discreción nunca antes vista. 🤫💎", "¿Buscas lo más avanzado? Nano Ring es el secreto de ¡Qué Glam!. 🪄", "Sin calor, sin químicos. Solo belleza pura con Nano Ring. 🌿", "La técnica más gentil con tu cabello natural. 🎀✨"],
+                ctas: ["Sé de las primeras en probar Nano Ring. ¡Agenda ya! 🗓️", "Comenta 'NANO' para recibir info exclusiva por DM. 📩", "Evaluación gratuita para esta técnica avanzada. ✨", "Luce natural, luce ¡Qué Glam!. Agenda en la Bio. 📲", "¿Lista para la revolución Nano? Contáctanos hoy. 🚀"],
+                caption: `🚀 INNOVACIÓN PURA: NANO RING TECH 🚀\n\nPresentamos la técnica más avanzada del mercado.\n\n#QueGlam #NanoRing #InnovacionCapilar #HairTech`
             }
-            
-            targetEl.innerText = `${prefix}${randomPick}`;
-            renderMktCanvas();
-        }
+        };
 
-        async function runAiMarketingV4() {
+        window.runAiMarketingV4 = async function() {
             const technique = document.getElementById('mktTechnique').value;
-            const contentType = mktTypeV4;
             const imageUrl = document.getElementById('mktImageUrl').value;
             const btn = document.getElementById('btnMagicV4');
 
-            if (!imageUrl) {
-                alert("Euse, por favor selecciona una imagen primero ✨");
-                return;
-            }
-
+            if (!imageUrl) { alert("Euse, selecciona una imagen primero ✨"); return; }
             btn.disabled = true;
             btn.innerHTML = `<span class="material-symbols-outlined spin">sync</span>`;
 
             try {
-                await new Promise(r => setTimeout(r, 1500));
-
-                const variations = {
-                    'Punto Americano': {
-                        hook: `"¿Cansada de esperar años para un largo de sueños? El Punto Americano es el secreto 😱"`,
-                        body: `Mostramos el proceso real. Sin dolor, resultado orgánico y natural.`,
-                        cta: `"Dile 'SÍ' al largo premium. Agenda tu diagnóstico capilar gratuito."`
-                    },
-                    'Microchip': {
-                        hook: `"¿Volumen y discreción total? El Microchip es la técnica que necesitas ✨"`,
-                        body: `Aplicación imperceptible que protege tu cabello natural.`,
-                        cta: `"¡Cotiza tu cambio de look hoy mismo por DM!"`
-                    },
-                    'Nudo Brasileño': {
-                        hook: `"Resistencia y belleza artesanal con nuestro Nudo Brasileño 🇧🇷✨"`,
-                        body: `Raíces firmes y volumen espectacular por meses.`,
-                        cta: `"¡Reserva tu hora en el link de la Bio!"`
-                    }
-                };
-
-                const content = variations[technique] || variations['Punto Americano'];
-
-                let prefix = "";
-                if (contentType === 'Reel') prefix = "🎬 Reel: ";
-                if (contentType === 'Post') prefix = "📸 Post: ";
-
-                document.getElementById('resHookV4').innerText = `${prefix}${content.hook}`;
-                document.getElementById('resBodyV4').innerText = content.body;
-                document.getElementById('resCtaV4').innerText = content.cta;
-                
-                document.getElementById('resCaptionV4').innerText = `✨ Transformación ¡Qué Glam! ✨\n\n¿Lista para el largo de tus sueños? Técnica ${technique}.\n\n#QueGlam #${technique.replace(/\s/g, '')}`;
-
-            } catch (error) {
-                console.error(error);
-            } finally {
+                await new Promise(r => setTimeout(r, 800));
+                const content = AI_POOL[technique] || AI_POOL['Punto Americano'];
+                document.getElementById('resHookV4').innerText = content.hooks[Math.floor(Math.random() * content.hooks.length)];
+                document.getElementById('resCtaV4').innerText = content.ctas[Math.floor(Math.random() * content.ctas.length)];
+                document.getElementById('resCaptionV4').innerText = content.caption;
+            } catch (error) { console.error("Error IA:", error); } 
+            finally {
                 btn.disabled = false;
-                btn.innerHTML = `<span class="material-symbols-outlined">auto_awesome</span> ¡MAGIA CON IA!`;
+                btn.innerHTML = `<span class="material-symbols-outlined">auto_awesome</span> GENERAR MAGIA IA`;
                 renderMktCanvas();
             }
         }
 
-        window.copySimpleText = (text) => {
-            if (!text) return;
-            navigator.clipboard.writeText(text).then(() => {
-                alert("¡Copiado al portapapeles! 📋");
-            }).catch(err => {
-                console.error('Error al copiar: ', err);
-            });
+        window.regeneratePartV4 = async function(part) {
+            const technique = document.getElementById('mktTechnique').value;
+            const content = AI_POOL[technique] || AI_POOL['Punto Americano'];
+            const choices = part === 'hook' ? content.hooks : content.ctas;
+            document.getElementById(part === 'hook' ? 'resHookV4' : 'resCtaV4').innerText = choices[Math.floor(Math.random() * choices.length)];
+            renderMktCanvas();
         }
 
-        // ================= DOWNLOAD MARKETING IMAGE (CANVAS ENGINE) =================
-        window.downloadMktImage = function() {
-            const preview = document.getElementById('mktRealPreview');
-            if(!preview.src) { alert("Genera magia primero, Euse."); return; }
-            const link = document.createElement('a');
-            link.download = `queglam-post-${Date.now()}.jpg`;
-            link.href = preview.src;
-            link.click();
-        }
-
-        async function renderMktCanvas() {
+        window.renderMktCanvas = function() {
             const imageUrl = document.getElementById('mktImageUrl').value;
+            if(!imageUrl) return;
+
             const hook = document.getElementById('resHookV4').innerText;
             const cta = document.getElementById('resCtaV4').innerText;
-
-            // Controles dinámicos
-            const hookYScale = parseFloat(document.getElementById('mktHookPos')?.value || 0.75);
-            const hookBaseSize = parseInt(document.getElementById('mktHookSize')?.value || 60);
-            const logoText = document.getElementById('mktLogoText')?.value || "¡QUÉ GLAM!";
-            const logoSize = parseInt(document.getElementById('mktLogoSize')?.value || 35);
-            const logoY = parseInt(document.getElementById('mktLogoPos')?.value || 80);
-            const ctaYScale = parseFloat(document.getElementById('mktCtaPos')?.value || 0.92);
-            const overlayAlpha = parseFloat(document.getElementById('mktOverlay')?.value || 0.7);
-
-            if(!imageUrl) return;
+            const logoText = document.getElementById('mktLogoText').value || "¡QUÉ GLAM!";
+            const logoTopSize = parseInt(document.getElementById('mktLogoSize').value || 45);
+            const logoTopPos = parseInt(document.getElementById('mktLogoPos').value || 80);
+            const hookYScale = parseFloat(document.getElementById('mktHookPos').value || 0.75);
+            const hookFontSize = parseInt(document.getElementById('mktHookSize').value || 85);
+            const ctaYScale = parseFloat(document.getElementById('mktCtaPos').value || 0.92);
+            const overlayAlpha = parseFloat(document.getElementById('mktOverlay').value || 0.75);
 
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             const img = new Image();
             
             img.onload = function() {
-                canvas.width = 1080;
-                canvas.height = 1350;
-
+                canvas.width = 1080; canvas.height = 1350;
                 const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
                 const x = (canvas.width / 2) - (img.width / 2) * scale;
                 const y = (canvas.height / 2) - (img.height / 2) * scale;
                 ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
 
-                // Overlay Gradiente Adaptable
-                const gr = ctx.createLinearGradient(0, canvas.height * 0.4, 0, canvas.height);
-                gr.addColorStop(0, "rgba(0,0,0,0)");
-                gr.addColorStop(0.6, `rgba(0,0,0,${overlayAlpha * 0.8})`);
-                gr.addColorStop(1, `rgba(0,0,0,${overlayAlpha})`);
-                ctx.fillStyle = gr;
+                const grad = ctx.createLinearGradient(0, canvas.height * 0.4, 0, canvas.height);
+                grad.addColorStop(0, "rgba(0,0,0,0)");
+                grad.addColorStop(1, `rgba(0,0,0,${overlayAlpha})`);
+                ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Logo Top Adaptable (Texto dinámico)
-                ctx.fillStyle = "#FF69B4";
-                ctx.font = `900 ${logoSize}px Nunito, sans-serif`;
                 ctx.textAlign = "center";
-                ctx.fillText(logoText.toUpperCase(), canvas.width / 2, logoY);
+                ctx.fillStyle = "#FF69B4";
+                ctx.font = `900 ${logoTopSize}px Nunito, sans-serif`;
+                ctx.fillText(logoText.toUpperCase(), canvas.width / 2, logoTopPos);
 
-                // HOOK (Gancho) con Auto-Fit
                 ctx.fillStyle = "#FFFFFF";
-                let currentHookSize = hookBaseSize;
-                ctx.font = `900 ${currentHookSize}px Nunito, sans-serif`;
-                
+                ctx.font = `900 ${hookFontSize}px Nunito, sans-serif`;
                 const words = hook.split(' ');
-                let line = '';
-                let lines = [];
+                let line = ''; let lines = [];
                 for(let n = 0; n < words.length; n++) {
-                    let testLine = line + words[n] + ' ';
-                    let metrics = ctx.measureText(testLine);
-                    if (metrics.width > canvas.width * 0.88 && n > 0) {
-                        lines.push(line);
-                        line = words[n] + ' ';
-                    } else { line = testLine; }
+                    let test = line + words[n] + ' ';
+                    if (ctx.measureText(test).width > canvas.width * 0.85 && n > 0) { lines.push(line); line = words[n] + ' '; }
+                    else { line = test; }
                 }
                 lines.push(line);
-
-                let yStart = canvas.height * hookYScale - (lines.length * (currentHookSize / 2));
-                lines.forEach((l, i) => {
-                    ctx.fillText(l, canvas.width / 2, yStart + (i * (currentHookSize + 15)));
-                });
-
-                // CTA con Auto-Fit (Para no cortar texto)
-                let ctaSize = 40;
-                ctx.font = `800 ${ctaSize}px Nunito, sans-serif`;
-                let ctaText = cta.toUpperCase();
-                let ctaMetrics = ctx.measureText(ctaText);
-                
-                // Reducir si es muy largo
-                if (ctaMetrics.width > canvas.width * 0.9) {
-                    ctaSize = (canvas.width * 0.88) / ctaText.length * 1.5;
-                    ctx.font = `800 ${ctaSize}px Nunito, sans-serif`;
-                }
-
-                // Línea Separadora
-                ctx.strokeStyle = "rgba(255,255,255,0.2)";
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(canvas.width * 0.35, canvas.height * ctaYScale - 60);
-                ctx.lineTo(canvas.width * 0.65, canvas.height * ctaYScale - 60);
-                ctx.stroke();
+                let sY = canvas.height * hookYScale - (lines.length * (hookFontSize / 2));
+                lines.forEach((l, i) => { ctx.fillText(l.trim(), canvas.width / 2, sY + (i * (hookFontSize * 1.2))); });
 
                 ctx.fillStyle = "#C5A059";
-                ctx.fillText(ctaText, canvas.width / 2, canvas.height * ctaYScale);
+                ctx.font = `800 42px Nunito, sans-serif`;
+                ctx.fillText(cta.toUpperCase(), canvas.width / 2, canvas.height * ctaYScale);
 
-                const previewImg = document.getElementById('mktRealPreview');
-                previewImg.src = canvas.toDataURL('image/jpeg', 0.9);
-                document.getElementById('mktPreviewContainer').style.display = 'block';
-                document.getElementById('mktPreviewPlaceholder').style.display = 'none';
+                document.getElementById('mktRealPreview').src = canvas.toDataURL('image/jpeg', 0.9);
             };
             img.src = imageUrl;
         }
 
-        window.applyToHook = (text) => {
-            document.getElementById('resHookV4').innerText = text;
-            renderMktCanvas();
+        window.downloadMktImage = function() {
+            const preview = document.getElementById('mktRealPreview');
+            if(!preview || !preview.src) { alert("Euse, sube una foto primero."); return; }
+            const link = document.createElement('a');
+            link.download = `queglam-studio-${Date.now()}.jpg`;
+            link.href = preview.src;
+            link.click();
         }
 
-        // Hook into runAiMarketingV4 is needed at the end of the generator
-        // Modified runAiMarketingV4 to update renderMktCanvas automatically
-        const originalRunAi = window.runAiMarketingV4;
-        window.runAiMarketingV4 = async function() {
-            await originalRunAi();
-            setTimeout(renderMktCanvas, 500); // Dar tiempo a que el texto se escriba
+        window.copySimpleText = (text) => {
+            navigator.clipboard.writeText(text).then(() => alert("¡Copiado! 📋"));
         }
 
-        // Initialize (Solo cargamos lo necesario)
-        loadData(); // Cargar calendario
-        loadProductos(); // Cargar tienda
+        // Initialize (Cargamos lo necesario)
+        loadData(); loadProductos(); 
 
-        // Estilos para la animación de carga
         const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-            .spin { display: inline-block; }
-        `;
+        style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } .spin { animation: spin 1s linear infinite; display: inline-block; }`;
         document.head.appendChild(style);
 
         async function deleteProducto(id) {
-            if (confirm("¿Eliminar este producto de la tienda?")) {
+            if (confirm("¿Eliminar producto?")) {
                 const { error } = await _supabase.from('productos').delete().eq('id', id);
-                if (error) alert('Error eliminando producto');
-                else loadProductos();
+                if (error) alert('Error'); else loadProductos();
             }
         }
     </script>
 </body>
-
 </html>
