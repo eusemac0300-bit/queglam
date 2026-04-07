@@ -958,7 +958,7 @@
                          <!-- Panel de Controles -->
                         <div class="mkt-controls-side">
                             <div class="mkt-v4-header" style="margin-bottom: 1.5rem;">
-                                <h1 style="font-size: 1.6rem; color: var(--charcoal); margin:0;">✨ Studio ¡Qué Glam! <span style="color:var(--pink); font-size:0.8rem; font-weight:900;">v4.8.5 ULTIMATE</span></h1>
+                                <h1 style="font-size: 1.6rem; color: var(--charcoal); margin:0;">✨ Studio ¡Qué Glam! <span style="color:var(--pink); font-size:0.8rem; font-weight:900;">v4.8.6 ULTIMATE</span></h1>
                                 <p style="font-size: 0.8rem; color: #888;">Orden lógico de diseño por componentes.</p>
                             </div>
 
@@ -1022,7 +1022,8 @@
                                 </div>
                                 <div id="resCtaV4" class="mkt-text-input" contenteditable="true" oninput="renderMktCanvas()">¡RESERVA TU CITA HOY!</div>
                                 <div class="mkt-sliders-grid">
-                                    <div class="mkt-mini-slider" style="grid-column: span 2;"><label>📍 Posición Y</label><input type="range" id="mktCtaPos" min="0.1" max="0.98" value="0.94" step="0.01" oninput="renderMktCanvas()"></div>
+                                    <div class="mkt-mini-slider"><label>ABC Tamaño</label><input type="range" id="mktCtaSize" min="20" max="100" value="42" oninput="renderMktCanvas()"></div>
+                                    <div class="mkt-mini-slider"><label>📍 Posición Y</label><input type="range" id="mktCtaPos" min="0.1" max="0.98" value="0.94" step="0.01" oninput="renderMktCanvas()"></div>
                                 </div>
                             </div>
 
@@ -1588,7 +1589,8 @@
             const hookLineHeight = parseFloat(document.getElementById('mktHookLH').value || 1.2);
             const priceFontSize = parseInt(document.getElementById('mktPriceSize').value || 70);
             const priceYScale = parseFloat(document.getElementById('mktPricePos').value || 0.84);
-            const ctaYScale = parseFloat(document.getElementById('mktCtaPos').value || 0.92);
+            const ctaYScale = parseFloat(document.getElementById('mktCtaPos').value || 0.94);
+            const ctaFontSize = parseInt(document.getElementById('mktCtaSize').value || 42);
             const overlayAlpha = parseFloat(document.getElementById('mktOverlay').value || 0.75);
 
             const canvas = document.createElement('canvas');
@@ -1625,7 +1627,7 @@
                 ctx.font = `900 ${priceFontSize}px Nunito, sans-serif`;
                 ctx.fillText(price.toUpperCase(), canvas.width / 2, canvas.height * priceYScale);
                 ctx.fillStyle = "#C5A059";
-                ctx.font = `800 42px Nunito, sans-serif`;
+                ctx.font = `800 ${ctaFontSize}px Nunito, sans-serif`;
                 ctx.fillText(cta.toUpperCase(), canvas.width / 2, canvas.height * ctaYScale);
                 document.getElementById('mktRealPreview').src = canvas.toDataURL('image/jpeg', 0.9);
             };
