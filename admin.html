@@ -921,7 +921,7 @@
             </div>
         </div>
 
-        <!-- Vista Marketing: AI STUDIO v4.1 ULTIMATE -->
+        <!-- Vista Marketing: AI STUDIO v4.8.0 ULTIMATE -->
         <div id="view-marketing" class="view-section">
             <div class="mkt-v4-container">
                 <!-- Sidebar Interno -->
@@ -945,11 +945,25 @@
                 <!-- Main Content Area -->
                 <div class="mkt-content">
                     <div id="mkt-subview-create" class="mkt-lab-grid">
-                        
+                        <div id="mktResultsV4" class="mkt-results-grid">
+                            <div class="mkt-result-card">
+                                <div class="card-head"><span>GANCHO (HOOK)</span><button onclick="regeneratePartV4('hook')">🔄</button></div>
+                                <div id="resHookV4" contenteditable="true" oninput="renderMktCanvas()">¡TRANSFORMACIÓN INCREÍBLE!</div>
+                            </div>
+                            <div class="mkt-result-card">
+                                <div class="card-head"><span>PRECIO</span><button onclick="regeneratePartV4('price')">🔄</button></div>
+                                <div id="resPriceV4" contenteditable="true" oninput="renderMktCanvas()">$0.000</div>
+                            </div>
+                            <div class="mkt-result-card">
+                                <div class="card-head"><span>CIERRE (CTA)</span><button onclick="regeneratePartV4('cta')">🔄</button></div>
+                                <div id="resCtaV4" contenteditable="true" oninput="renderMktCanvas()">¡RESERVA TU CITA HOY!</div>
+                            </div>
+                        </div>
+               
                         <!-- Col 1: Editor Panel -->
                         <div class="mkt-controls-side">
                             <div class="mkt-v4-header" style="margin-bottom: 1.5rem;">
-                                <h1 style="font-size: 1.6rem; color: var(--charcoal); margin:0;">✨ Studio ¡Qué Glam! <span style="color:var(--pink); font-size:0.8rem; font-weight:900;">ULTIMATE</span></h1>
+                                <h1 style="font-size: 1.6rem; color: var(--charcoal); margin:0;">✨ Studio ¡Qué Glam! <span style="color:var(--pink); font-size:0.8rem; font-weight:900;">v4.8.0 ULTIMATE</span></h1>
                                 <p style="font-size: 0.8rem; color: #888;">Diseña contenido editorial de alto impacto con IA.</p>
                             </div>
 
@@ -1014,10 +1028,43 @@
                                     </div>
                                     <div><label>POS. TÍTULO</label><input type="range" id="mktLogoPos" min="20" max="300" value="80" oninput="renderMktCanvas()"></div>
                                     <div><label>TAM. TÍTULO</label><input type="range" id="mktLogoSize" min="15" max="100" value="45" oninput="renderMktCanvas()"></div>
-                                    <div><label>POS. GANCHO</label><input type="range" id="mktHookPos" min="0.3" max="0.9" step="0.01" value="0.75" oninput="renderMktCanvas()"></div>
-                                    <div><label>TAM. GANCHO</label><input type="range" id="mktHookSize" min="30" max="140" value="85" oninput="renderMktCanvas()"></div>
+                                    <div class="mkt-control-group">
+                            <label>📐 Gancho: Tamaño y Ajuste</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="mkt-mini-slider">
+                                    <span>ABC <small>(Tamaño)</small></span>
+                                    <input type="range" id="mktHookSize" min="30" max="180" value="85" oninput="renderMktCanvas()">
+                                </div>
+                                <div class="mkt-mini-slider">
+                                    <span>↔️ <small>(Ancho)</small></span>
+                                    <input type="range" id="mktHookWidth" min="40" max="98" value="85" oninput="renderMktCanvas()">
+                                </div>
+                                <div class="mkt-mini-slider">
+                                    <span>↕️ <small>(Interlineado)</small></span>
+                                    <input type="range" id="mktHookLH" min="0.8" max="2.0" value="1.2" step="0.1" oninput="renderMktCanvas()">
+                                </div>
+                                <div class="mkt-mini-slider">
+                                    <span>📍 <small>(Posición)</small></span>
+                                    <input type="range" id="mktHookPos" min="0.1" max="0.9" value="0.75" step="0.01" oninput="renderMktCanvas()">
+                                </div>
+                            </div>
+                        </div>
                                     <div><label>POS. CIERRE</label><input type="range" id="mktCtaPos" min="0.8" max="0.98" step="0.01" value="0.92" oninput="renderMktCanvas()"></div>
                                     <div><label>SOMBRA FONDO</label><input type="range" id="mktOverlay" min="0" max="1" step="0.05" value="0.75" oninput="renderMktCanvas()"></div>
+                                </div>
+
+                                <div class="mkt-control-group">
+                                    <label>💰 Control del Precio</label>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                        <div class="mkt-mini-slider">
+                                            <span>ABC <small>(Tamaño)</small></span>
+                                            <input type="range" id="mktPriceSize" min="30" max="150" value="70" oninput="renderMktCanvas()">
+                                        </div>
+                                        <div class="mkt-mini-slider">
+                                            <span>📍 <small>(Posición Y)</small></span>
+                                            <input type="range" id="mktPricePos" min="0.1" max="0.95" value="0.84" step="0.01" oninput="renderMktCanvas()">
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -1452,37 +1499,29 @@
             loadProductos();
         });
 
-        // ================= MARKETING LAB v4.5: ULTIMATE STUDIO =================
+        // ================= MARKETING LAB v4.8.0: ULTIMATE STUDIO =================
         let mktTypeV4 = 'Post'; 
         const mktImageUrl = document.getElementById('mktImageUrl');
 
-        // Logic for File Selection
         window.processMktFile = function(file) {
             if (!file || !file.type.startsWith('image/')) { 
-                alert("Euse, por favor sube solo imágenes. ✨"); 
-                return; 
+                alert("Euse, sube solo imágenes. ✨"); return; 
             }
-            
             const reader = new FileReader();
             reader.onload = function (event) {
                 const img = new Image();
                 img.onload = function () {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    
                     const MAX_RES = 1600;
                     let w = img.width; let h = img.height;
                     if (w > MAX_RES) { h *= MAX_RES / w; w = MAX_RES; }
-                    
                     canvas.width = w; canvas.height = h;
                     ctx.drawImage(img, 0, 0, w, h);
-                    
                     const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
                     mktImageUrl.value = dataUrl;
-                    
                     document.getElementById('mktPreviewPlaceholder').style.display = 'none';
                     document.getElementById('mktPreviewContainer').style.display = 'block';
-                    
                     renderMktCanvas();
                 };
                 img.src = event.target.result;
@@ -1497,26 +1536,31 @@
         const AI_POOL = {
             'Punto Americano': {
                 hooks: ["¿Cansada de esperar años para un cabello largo? Punto Americano es la solución ✨", "¡La transformación que buscabas llegó a ¡Qué Glam! 🎀", "Punto Americano: Máxima naturalidad y volumen instantáneo. 😱", "¿Cabello corto y sin vida? Deja que el Punto Americano haga magia. 🪄", "Resultados que enamoran: Melena XXL perfecta hoy mismo. 💎"],
+                prices: ["$120.000", "$150.000", "$180.000", "Consultar Promo"],
                 ctas: ["Comenta 'QUIERO' para cobrar tu diagnóstico gratuito.", "¡Agenda hoy y luce increíble este fin de semana! 🗓️", "Cotiza tu cambio de look directo en el link de la Bio. 📲", "Dile adiós al cabello corto. ¡Escríbenos por DM! 💎", "¿Lista para tu mejor versión? Reserva tu hora aquí 👇"],
                 caption: `✨ TRANSFORMACIÓN PUNTO AMERICANO ✨\n\n¿Buscas el largo y volumen perfecto sin maltratar tu cabello? Nuestra técnica estrella de Punto Americano es la favorita de nuestras clientas por su naturalidad y durabilidad.\n\n#QueGlam #PuntoAmericano #ExtensionesDeCabello #Santiago`
             },
             'Microchip': {
                 hooks: ["Volumen y discreción absoluta: El poder de la técnica Microchip. 🤫✨", "¿Quieres extensiones pero temes que se noten? El Microchip es para ti.", "La técnica más amada por quienes buscan naturalidad total. 🌿", "No es magia, es la técnica Microchip invisible en ¡Qué Glam! 🪄💎", "Técnica imperceptible para una melena de impacto. 🎀"],
+                prices: ["$110.000", "$140.000", "$170.000", "Promo Septiembre"],
                 ctas: ["Mándanos un mensajito para evaluarte hoy mismo. 📩", "¡Dale vida a tu cabello! Agenda tu evaluación personalizada.", "Cotiza tu cambio al WhatsApp del perfil. ✨", "¿Lista para brillar? Agenda tu hora enviando un DM. 📲", "Síguenos para ver más cambios increíbles. 👇"],
                 caption: `💎 MICROCHIP: LA DISCRECIÓN HECHA ARTE 💎\n\nSi te preocupa que tus extensiones se noten, la técnica de Microchip es tu solución definitiva.\n\n#QueGlam #Microchip #ExtensionesInvisibles #HairStudio`
             },
             'Nudo Brasileño': {
                 hooks: ["Resistencia y belleza artesanal con nuestro Nudo Brasileño. 🇧🇷✨", "¿Buscas durabilidad y volumen extremo? Mira este resultado. 🤩", "La favorita para melenas con mucha personalidad y fuerza. 👑", "Belleza que dura: Descubre el secreto del Nudo Brasileño. 🪄", "Potencia tu mirada con una melena imponente y segura. 🦁💎"],
+                prices: ["$90.000", "$100.000", "$130.000", "Lanzamiento"],
                 ctas: ["¡Reserva tu hora directo en el link de la Bio! 🗓️", "Comenta 'BRASIL' para enviarte toda la información. 📩", "¡Atrévete al cambio! Evaluaciones disponibles hoy.", "Agenda hoy tu transformación en ¡Qué Glam!. ✨", "Calidad y estilo en un solo lugar. ¡Escríbenos! 📲"],
                 caption: `🇧🇷 FUERZA Y BELLEZA: NUDO BRASILEÑO 🇧🇷\n\nAporta volumen y resistencia con un acabado artesanal.\n\n#QueGlam #NudoBrasileño #HairExtensions #VolumenCapilar`
             },
             'Extensiones de Keratina': {
                 hooks: ["Elegancia suprema: El método de las celebridades (Keratina Premium) 👑", "¿Quieres el acabado más lujoso? Keratina es la respuesta. ✨💎", "Unión perfecta y duradera. Así se ve la Keratina en ¡Qué Glam!. 🎀", "Naturalidad y confort sin límites para tu día a día. 💅", "El lujo de una melena perfecta todos los días. 🌟✨"],
+                prices: ["$200.000", "$250.000", "$300.000", "Lujo Premium"],
                 ctas: ["¡Transforma tu look hoy! Agenda tu cupo por DM. 📲", "Consulta por nuestros paquetes Premium de Keratina. 💎", "Tu cabello merece lo mejor. ¡Reserva ahora! ✨", "¿Quieres este resultado? Haz click en el link de la Bio. 🖱️", "Calidad garantizada. 📩"],
                 caption: `👑 LUJO CAPILAR: KERATINA PREMIUM 👑\n\nEl estándar de oro en extensiones.\n\n#QueGlam #KeratinaPremium #LuxuryHair #SantiagoBeauty`
             },
             'Nano Ring': {
                 hooks: ["Tecnología Nano Ring: El futuro de las extensiones ya está aquí. 🚀✨", "Aros microscópicos para una discreción nunca antes vista. 🤫💎", "¿Buscas lo más avanzado? Nano Ring es el secreto de ¡Qué Glam!. 🪄", "Sin calor, sin químicos. Solo belleza pura con Nano Ring. 🌿", "La técnica más gentil con tu cabello natural. 🎀✨"],
+                prices: ["$140.000", "$160.000", "$190.000", "Tech Promo"],
                 ctas: ["Sé de las primeras en probar Nano Ring. ¡Agenda ya! 🗓️", "Comenta 'NANO' para recibir info exclusiva por DM. 📩", "Evaluación gratuita para esta técnica avanzada. ✨", "Luce natural, luce ¡Qué Glam!. Agenda en la Bio. 📲", "¿Lista para la revolución Nano? Contáctanos hoy. 🚀"],
                 caption: `🚀 INNOVACIÓN PURA: NANO RING TECH 🚀\n\nPresentamos la técnica más avanzada del mercado.\n\n#QueGlam #NanoRing #InnovacionCapilar #HairTech`
             }
@@ -1526,15 +1570,14 @@
             const technique = document.getElementById('mktTechnique').value;
             const imageUrl = document.getElementById('mktImageUrl').value;
             const btn = document.getElementById('btnMagicV4');
-
-            if (!imageUrl) { alert("Euse, selecciona una imagen primero ✨"); return; }
+            if (!imageUrl) { alert("Euse, selecciona imagen primero ✨"); return; }
             btn.disabled = true;
             btn.innerHTML = `<span class="material-symbols-outlined spin">sync</span>`;
-
             try {
                 await new Promise(r => setTimeout(r, 800));
                 const content = AI_POOL[technique] || AI_POOL['Punto Americano'];
                 document.getElementById('resHookV4').innerText = content.hooks[Math.floor(Math.random() * content.hooks.length)];
+                document.getElementById('resPriceV4').innerText = content.prices[Math.floor(Math.random() * content.prices.length)];
                 document.getElementById('resCtaV4').innerText = content.ctas[Math.floor(Math.random() * content.ctas.length)];
                 document.getElementById('resCaptionV4').innerText = content.caption;
             } catch (error) { console.error("Error IA:", error); } 
@@ -1548,64 +1591,70 @@
         window.regeneratePartV4 = async function(part) {
             const technique = document.getElementById('mktTechnique').value;
             const content = AI_POOL[technique] || AI_POOL['Punto Americano'];
-            const choices = part === 'hook' ? content.hooks : content.ctas;
-            document.getElementById(part === 'hook' ? 'resHookV4' : 'resCtaV4').innerText = choices[Math.floor(Math.random() * choices.length)];
+            let choices = [];
+            let targetId = '';
+            if(part === 'hook') { choices = content.hooks; targetId = 'resHookV4'; }
+            else if(part === 'price') { choices = content.prices; targetId = 'resPriceV4'; }
+            else { choices = content.ctas; targetId = 'resCtaV4'; }
+            document.getElementById(targetId).innerText = choices[Math.floor(Math.random() * choices.length)];
             renderMktCanvas();
         }
 
         window.renderMktCanvas = function() {
             const imageUrl = document.getElementById('mktImageUrl').value;
             if(!imageUrl) return;
-
             const hook = document.getElementById('resHookV4').innerText;
+            const price = document.getElementById('resPriceV4').innerText;
             const cta = document.getElementById('resCtaV4').innerText;
             const logoText = document.getElementById('mktLogoText').value || "¡QUÉ GLAM!";
+            
             const logoTopSize = parseInt(document.getElementById('mktLogoSize').value || 45);
             const logoTopPos = parseInt(document.getElementById('mktLogoPos').value || 80);
             const hookYScale = parseFloat(document.getElementById('mktHookPos').value || 0.75);
             const hookFontSize = parseInt(document.getElementById('mktHookSize').value || 85);
+            const hookWidthFactor = parseInt(document.getElementById('mktHookWidth').value || 85) / 100;
+            const hookLineHeight = parseFloat(document.getElementById('mktHookLH').value || 1.2);
+            const priceFontSize = parseInt(document.getElementById('mktPriceSize').value || 70);
+            const priceYScale = parseFloat(document.getElementById('mktPricePos').value || 0.84);
             const ctaYScale = parseFloat(document.getElementById('mktCtaPos').value || 0.92);
             const overlayAlpha = parseFloat(document.getElementById('mktOverlay').value || 0.75);
 
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             const img = new Image();
-            
             img.onload = function() {
                 canvas.width = 1080; canvas.height = 1350;
                 const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
                 const x = (canvas.width / 2) - (img.width / 2) * scale;
                 const y = (canvas.height / 2) - (img.height / 2) * scale;
                 ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-
                 const grad = ctx.createLinearGradient(0, canvas.height * 0.4, 0, canvas.height);
                 grad.addColorStop(0, "rgba(0,0,0,0)");
                 grad.addColorStop(1, `rgba(0,0,0,${overlayAlpha})`);
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
                 ctx.textAlign = "center";
                 ctx.fillStyle = "#FF69B4";
                 ctx.font = `900 ${logoTopSize}px Nunito, sans-serif`;
                 ctx.fillText(logoText.toUpperCase(), canvas.width / 2, logoTopPos);
-
                 ctx.fillStyle = "#FFFFFF";
                 ctx.font = `900 ${hookFontSize}px Nunito, sans-serif`;
                 const words = hook.split(' ');
                 let line = ''; let lines = [];
                 for(let n = 0; n < words.length; n++) {
                     let test = line + words[n] + ' ';
-                    if (ctx.measureText(test).width > canvas.width * 0.85 && n > 0) { lines.push(line); line = words[n] + ' '; }
+                    if (ctx.measureText(test).width > canvas.width * hookWidthFactor && n > 0) { lines.push(line); line = words[n] + ' '; }
                     else { line = test; }
                 }
                 lines.push(line);
                 let sY = canvas.height * hookYScale - (lines.length * (hookFontSize / 2));
-                lines.forEach((l, i) => { ctx.fillText(l.trim(), canvas.width / 2, sY + (i * (hookFontSize * 1.2))); });
-
+                lines.forEach((l, i) => { ctx.fillText(l.trim(), canvas.width / 2, sY + (i * (hookFontSize * hookLineHeight))); });
+                ctx.fillStyle = "#FFD700";
+                ctx.font = `900 ${priceFontSize}px Nunito, sans-serif`;
+                ctx.fillText(price.toUpperCase(), canvas.width / 2, canvas.height * priceYScale);
                 ctx.fillStyle = "#C5A059";
                 ctx.font = `800 42px Nunito, sans-serif`;
                 ctx.fillText(cta.toUpperCase(), canvas.width / 2, canvas.height * ctaYScale);
-
                 document.getElementById('mktRealPreview').src = canvas.toDataURL('image/jpeg', 0.9);
             };
             img.src = imageUrl;
@@ -1624,9 +1673,8 @@
             navigator.clipboard.writeText(text).then(() => alert("¡Copiado! 📋"));
         }
 
-        // Initialize (Cargamos lo necesario)
+        // Initialize
         loadData(); loadProductos(); 
-
         const style = document.createElement('style');
         style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } .spin { animation: spin 1s linear infinite; display: inline-block; }`;
         document.head.appendChild(style);
