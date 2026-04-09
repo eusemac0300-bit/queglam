@@ -42,6 +42,10 @@
             --shadow-lg: 0 20px 50px rgba(0,0,0,0.15);
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: var(--font);
             background-color: var(--bg-soft);
@@ -51,9 +55,9 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem 2rem;
         }
 
         .header {
@@ -478,6 +482,7 @@
             min-width: 0;
             display: flex;
             flex-direction: column;
+            width: 100%;
         }
 
         .mkt-v4-header {
