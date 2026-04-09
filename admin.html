@@ -1664,7 +1664,29 @@
                 });
                 ctx.fillStyle = "#C5A059";
                 ctx.font = `800 ${ctaFontSize}px Nunito, sans-serif`;
-                ctx.fillText(cta.toUpperCase(), canvas.width / 2, canvas.height * ctaYScale);
+                
+                const ctaWidthFactor = 0.90;
+                const ctaLineHeight = 1.2;
+                let ctaRaws = cta.split('\n');
+                let ctaLines = [];
+                ctaRaws.forEach(r => {
+                    let cWords = r.split(' ');
+                    let cLine = '';
+                    for(let n = 0; n < cWords.length; n++) {
+                        let cTest = cLine + cWords[n] + ' ';
+                        if (ctx.measureText(cTest).width > canvas.width * ctaWidthFactor && n > 0) {
+                            ctaLines.push(cLine);
+                            cLine = cWords[n] + ' ';
+                        } else {
+                            cLine = cTest;
+                        }
+                    }
+                    ctaLines.push(cLine);
+                });
+                let ctaStartY = canvas.height * ctaYScale - (ctaLines.length * (ctaFontSize / 2));
+                ctaLines.forEach((l, i) => { 
+                    ctx.fillText(l.toUpperCase().trim(), canvas.width / 2, ctaStartY + (i * (ctaFontSize * ctaLineHeight))); 
+                });
                 document.getElementById('mktRealPreview').src = canvas.toDataURL('image/jpeg', 0.9);
             };
             img.src = imageUrl;
