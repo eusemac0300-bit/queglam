@@ -473,8 +473,9 @@
         .mkt-content {
             flex: 1;
             background: var(--pure-white);
-            padding: 2.5rem;
+            padding: 1.5rem; /* Compacting padding */
             overflow-y: auto;
+            min-width: 0; /* Ensures it doesn't push past screen boundaries */
         }
 
         .mkt-v4-header {
@@ -786,10 +787,10 @@
             color: #888;
         }
         /* Marketing Lab ULTIMATE Layout */
-        .mkt-lab-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 1rem; align-items: stretch; height: calc(100vh - 160px); overflow: hidden; }
-        @media (max-width: 1024px) { .mkt-lab-grid { grid-template-columns: 1fr; height: auto; overflow: visible; } }
-        .mkt-controls-side { display: flex; flex-direction: column; gap: 0.5rem; height: 100%; }
-        .mkt-preview-side { background: var(--charcoal); padding: 1rem; border-radius: 20px; box-shadow: var(--shadow-lg); color: white; display: flex; flex-direction: column; height: 100%; justify-content: space-between; }
+        .mkt-lab-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1rem; align-items: stretch; height: calc(100vh - 160px); overflow: hidden; width: 100%; }
+        @media (max-width: 1024px) { .mkt-lab-grid { grid-template-columns: minmax(0, 1fr); height: auto; overflow: visible; } }
+        .mkt-controls-side { display: flex; flex-direction: column; gap: 0.5rem; height: 100%; min-width: 0; }
+        .mkt-preview-side { background: var(--charcoal); padding: 1rem; border-radius: 20px; box-shadow: var(--shadow-lg); color: white; display: flex; flex-direction: column; height: 100%; justify-content: space-between; min-width: 0; }
         .ai-card-v4 { padding: 0.8rem !important; border-radius: 12px !important; margin-bottom: 0.5rem !important; background: white; border: 1px solid #eee; }
         .ai-card-v4 h4 { font-size: 0.7rem !important; margin-bottom: 0.3rem !important; }
         .ai-card-v4 p { font-size: 0.8rem !important; line-height: 1.2 !important; }
@@ -1037,8 +1038,8 @@
                                 <div class="group-label">💎 BRANDING & FONDO</div>
                                 <div class="mkt-sliders-grid">
                                     <div class="mkt-mini-slider" style="grid-column: span 2;">
-                                        <label>TÍTULO EN IMAGEN 🎀</label>
-                                        <input type="text" id="mktLogoText" value="¡QUÉ GLAM!" class="mkt-dropdown-v4" style="text-align:center;" oninput="renderMktCanvas()">
+                                        <label>TÍTULO 🎀</label>
+                                        <input type="text" id="mktLogoText" value="¡QUÉ GLAM!" class="mkt-dropdown-v4" style="text-align:center; padding: 0.4rem;" oninput="renderMktCanvas()">
                                     </div>
                                     <div class="mkt-mini-slider"><label>📍 Pos. Título</label><input type="range" id="mktLogoPos" min="20" max="200" value="80" oninput="renderMktCanvas()"></div>
                                     <div class="mkt-mini-slider"><label>Tam. Título</label><input type="range" id="mktLogoSize" min="20" max="100" value="45" oninput="renderMktCanvas()"></div>
